@@ -5,7 +5,7 @@
              :model="formInline"
              class="demo-form-inline">
 
-      <el-form-item label="下单人人id">
+      <el-form-item label="下单人id">
         <el-input v-model="formInline.leekId"
                   placeholder="下单人id"></el-input>
       </el-form-item>
@@ -19,27 +19,29 @@
                   placeholder="下单人当前等级"></el-input>
       </el-form-item>
 
-      <el-form-item label="审核状态 ">
+      <el-form-item label="订单状态">
         <el-select v-model="formInline.status"
-                   placeholder="审核状态"
+                   placeholder="订单状态"
                    @change="onSubmit">
-          <el-option label="审核中  "
+          <el-option label="还未审核"
                      value="1"></el-option>
-          <el-option label="通过 "
+          <el-option label="已经审核/待发货 "
                      value="2"></el-option>
-          <el-option label="拒绝"
+          <el-option label="已发货/未收货"
                      value="3"></el-option>
-          <el-option label="已经过期"
+          <el-option label="已收货/未评论"
                      value="4"></el-option>
+          <el-option label="已评论"
+                     value="5"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="审核类型 ">
-        <el-select v-model="formInline.type"
-                   placeholder="审核类型 "
+      <el-form-item label="配送类型">
+        <el-select v-model="formInline.deliveryType"
+                   placeholder="配送类型"
                    @change="onSubmit">
-          <el-option label="普通人审核   "
+          <el-option label="自提"
                      value="1"></el-option>
-          <el-option label="平台人员在审核 "
+          <el-option label="邮寄"
                      value="2"></el-option>
         </el-select>
       </el-form-item>
@@ -53,83 +55,67 @@
     <el-table :data="tableData">
       <!-- 其他-->
       <el-table-column prop="id"
-                       label="id"
+                       label="订单id"
                        width="250"></el-table-column>
-      <el-table-column prop="rank"
-                       label="申请人当前等级"
+      <el-table-column prop="shopId"
+                       label="店铺id"
                        width="250"></el-table-column>
-      <el-table-column prop="aldebaran"
-                       label="升级后的等级"
-                       width="200"></el-table-column>
-      <el-table-column prop="orderId"
-                       label="对应的订单id"
-                       width="200"></el-table-column>
-      <!-- 需要升级人 -->
+      <!-- 下单人 -->
       <el-table-column prop="leekId"
-                       label="需要升级人id"
+                       label="下单人id"
                        width="150"></el-table-column>
       <el-table-column prop="leekName"
-                       label="需要升级人姓名"
+                       label="下单人姓名"
                        width="150"></el-table-column>
       <el-table-column prop="leekPhone"
-                       label="需要升级人电话"
+                       label="下单人电话"
                        width="150"></el-table-column>
-      <el-table-column label="需要升级人头像"
+      <el-table-column prop="leekWechat"
+                       label="下单人微信"
+                       width="150"></el-table-column>
+      <el-table-column prop="leekZfb"
+                       label="下单人支付宝"
+                       width="150"></el-table-column>
+      <el-table-column label="下单人头像"
                        width="150">
         <template slot-scope="scope"><img v-image-preview
                style="width: 35px; height: 35px"
                :src="scope.row.leekImg"
                fit="fill" /></template>
       </el-table-column>
-      <!-- 审核人 -->
-      <el-table-column prop="masterId"
-                       label="审核人id"
-                       width="150"></el-table-column>
-      <el-table-column prop="masterName"
-                       label="审核人姓名"
-                       width="150"></el-table-column>
-      <el-table-column prop="masterPhone"
-                       label="审核人电话"
-                       width="150"></el-table-column>
-      <el-table-column prop="masterWechat"
-                       label="审核人微信"
-                       width="150"></el-table-column>
-      <el-table-column label="审核人头像"
-                       width="150">
-        <template slot-scope="scope"><img v-image-preview
-               style="width: 35px; height: 35px"
-               :src="scope.row.masterImg"
-               fit="fill" /></template>
-      </el-table-column>
       <el-table-column prop="status"
-                       label="审核状态 "
+                       label="订单状态"
                        width="150"></el-table-column>
-      <el-table-column prop="type"
-                       label="审核类型 "
+      <el-table-column prop="deliveryType"
+                       label="配送类型"
                        width="150"></el-table-column>
-      <el-table-column label="申请审核时间"
+      <el-table-column prop="rank"
+                       label="下单人当前等级"
+                       width="150"></el-table-column>
+      <el-table-column prop="aldebaran"
+                       label="下单人下单后等级"
+                       width="150"></el-table-column>
+      <el-table-column prop="amount"
+                       label="订单总金额"
+                       width="150"></el-table-column>
+      <el-table-column prop="address"
+                       label="地址"
+                       width="150"></el-table-column>
+      <el-table-column label="下单时间"
                        width="150">
-        <template slot-scope="scope">{{ parseTime(scope.row.time) }}</template>
+        <template slot-scope="scope">{{ parseTime(scope.row.orderTime) }}</template>
       </el-table-column>
-      <el-table-column prop="status"
-                       label="状态"
-                       width="150"></el-table-column>
-
-      <!-- <el-table-column fixed="right"
+      <el-table-column fixed="right"
                        label="操作"
                        width="120">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="putList(scope.row.id)"
+          <el-button @click.native.prevent="showOrderDetail(scope.row.id)"
                      type="text"
-                     size="small">审核</el-button>
-          <el-button @click.native.prevent="deleteThis(scope.row.id)"
-                     type="text"
-                     size="small">删除</el-button>
+                     size="small">查看订单详情</el-button>
         </template>
-      </el-table-column> -->
+      </el-table-column>
     </el-table>
     <!-- 分页区 -->
-
     <div class="blockpage"
          style="margin:0px auto">
       <el-pagination @size-change="handleSizeChange"
@@ -142,34 +128,47 @@
       </el-pagination>
     </div>
 
-    <!-- 修改状态  -->
-    <!-- <el-dialog title="操作"
+    <!-- 查看订单详情  -->
+    <el-dialog title="操作"
                :visible.sync="showView"
                width="80%">
-      <el-form ref="form"
-               :model="putForm"
-               label-width="120px">
-        <el-form-item label="投诉状态 ">
-          <el-select v-model="putForm.status"
-                     placeholder="投诉状态">
-            <el-option label="通过 "
-                       value="2"></el-option>
-            <el-option label="拒绝"
-                       value="3"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary"
-                     @click="putThis()">修改</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog> -->
+      <el-table :data="orderDetail">
+        <el-table-column prop="id"
+                         label="id"
+                         width="300"></el-table-column>
+        <el-table-column prop="productId"
+                         label="产品id"
+                         width="300"></el-table-column>
+        <el-table-column prop="name"
+                         label="产品名"
+                         width="300"></el-table-column>
+        <el-table-column label="图片"
+                         width="150">
+          <template slot-scope="scope"><img v-image-preview
+                 style="width: 35px; height: 35px"
+                 :src="scope.row.banner"
+                 fit="fill" /></template>
+        </el-table-column>
+        <el-table-column prop="skuId"
+                         label="规格id"
+                         width="300"></el-table-column>
+        <el-table-column prop="skuName"
+                         label="规格名"
+                         width="300"></el-table-column>
+        <el-table-column prop="num"
+                         label="购买数量"
+                         width="300"></el-table-column>
+        <el-table-column prop="price"
+                         label="价格"
+                         width="300"></el-table-column>
+      </el-table>
+    </el-dialog>
 
   </div>
 </template>
 
 <script>
-import { getApplyList, putComplaint, deleteComplaint } from "@/api/apply";
+import { getOrderList, getOrderDetail, } from "@/api/order";
 import { parseTime } from "@/utils/index"
 
 export default {
@@ -179,6 +178,7 @@ export default {
       tableData: [],
       currentPage4: 1,
       showView: false,
+      orderDetail: null,
       putForm: {
         id: null,
         status: null
@@ -189,76 +189,64 @@ export default {
       // 搜索内容
       formInline: {
         leekId: null,
-        masterId: null,
+        shopId: null,
         status: null,
-        type: null,
-        orderId: null
+        rank: null,
+        deliveryType: null
       }
     }
   },
   mounted () {
-    this.getApplyList()
+    this.getOrderList()
   },
 
   created () {
   },
 
   methods: {
-    // putList (id) {
-    //   console.log('投诉id', id)
-    //   this.putForm.id = id
-    //   this.showView = true
-    // },
-    // 修改审核状态
-    // putThis () {
-    //   putComplaint(this.putForm.id, this.putForm.status).then(res => {
-    //     this.$message({
-    //       type: 'success',
-    //       message: '修改成功!'
-    //     })
-    //     this.showView = false
-    //     this.getComplaintList()
-    //   }).catch(() => {
-    //     this.$message({
-    //       type: 'warning',
-    //       message: '修改失败'
-    //     })
-    //   })
-    // },
+    // 查看订单详情
+    showOrderDetail (orderId) {
+      this.showView = true
+      console.log('获取到的订单id', orderId)
+      getOrderDetail(orderId).then(res => {
+        console.log('获取订单详情', res)
+        this.orderDetail = res.data
+      })
+    },
     // 选择当前页面显示多少条数据的选择框发生改变
     handleSizeChange (e) {
       // console.log('当前每页数量', e)
       this.pageSize = e
-      this.getApplyList()
+      this.getOrderList()
     },
     // 分页改变 e点击的页码  用户手动输入了页面然后go
     handleCurrentChange (e) {
       // console.log('当前页码', e)
       this.pageindex = e - 1
-      this.getApplyList()
+      this.getOrderList()
     },
     // 搜索
     onSubmit () {
-      this.getApplyList()
+      this.getOrderList()
     },
-    // 获取用户列表
-    getApplyList () {
+    // 获取订单列表
+    getOrderList () {
       let query = {
         pageIndex: this.pageindex,
         pageSize: this.pageSize,
         status: this.formInline.status,
         leekId: this.formInline.leekId,
-        masterId: this.formInline.masterId,
-        type: this.formInline.type,
-        orderId: this.formInline.orderId
+        deliveryType: this.formInline.deliveryType,
+        shopId: this.formInline.shopId,
+        rank: this.formInline.rank
       }
-      getApplyList(query).then(res => {
-        console.log('获取到的投诉列表', res)
+      getOrderList(query).then(res => {
+        console.log('获取订单列表', res)
         this.tableData = res.data
         this.total = res.pageTotal
       })
     },
-    // 删除投诉
+    // 删除订单
     // deleteThis (id) {
     //   deleteComplaint(id).then(res => {
     //     if (res.code === '200') {

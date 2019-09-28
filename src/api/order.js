@@ -19,20 +19,14 @@ export function getOrderList(query) {
     if (query.shopId) { // 购买的店铺id
         url += '&shopId=' + query.shopId
     }
-    if (query.orderId) { // 对应订单id
-        url += '&orderId=' + query.orderId
-    }
     if (query.rank) { // 下单人当前等级
         url += '&rank=' + query.rank
     }
     if (query.deliveryType) { // 配送类型
         url += '&deliveryType=' + query.deliveryType
     }
-    if (query.status) { // 投诉状态
+    if (query.status) { // 订单状态
         url += '&status=' + query.status
-    }
-    if (query.type) { // 审核类型
-        url += '&type=' + query.type
     }
     return request({
         url: url,
@@ -42,7 +36,7 @@ export function getOrderList(query) {
 // 获取订单详情
 export function getOrderDetail(id) {
     return request({
-        url: '/orderDetail/' + id,
+        url: '/orderDetail?orderId=' + id,
         method: 'get'
     })
 }
