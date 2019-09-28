@@ -4,39 +4,35 @@
     <el-form :inline="true"
              :model="formInline"
              class="demo-form-inline">
-      <el-form-item label="id">
-        <el-input v-model="formInline.id"
-                  placeholder="id"></el-input>
+      <el-form-item label="用户id">
+        <el-input v-model="formInline.userId"
+                  placeholder="用户id"></el-input>
       </el-form-item>
-      <el-form-item label="电话号码">
-        <el-input v-model="formInline.phone"
-                  placeholder="电话号码"></el-input>
+      <el-form-item label="下级id">
+        <el-input v-model="formInline.leekId"
+                  placeholder="下级id"></el-input>
       </el-form-item>
-      <el-form-item label="等级">
-        <el-input v-model="formInline.rank"
-                  placeholder="等级"></el-input>
+      <el-form-item label="下级状态">
+        <el-input v-model="formInline.leekStatus"
+                  placeholder="下级状态"></el-input>
       </el-form-item>
-      <el-form-item label="用户状态 ">
-        <el-select v-model="formInline.status"
-                   placeholder="用户状态"
-                   @change="onSubmit">
-          <el-option label="正常使用过 "
-                     value="1"></el-option>
-          <el-option label="暂时停用"
-                     value="2"></el-option>
-          <el-option label="永久停用"
-                     value="3"></el-option>
-        </el-select>
+      <el-form-item label="下级等级">
+        <el-input v-model="formInline.leekRank"
+                  placeholder="下级等级"></el-input>
       </el-form-item>
-      <el-form-item label="用户类型 ">
+      <el-form-item label="下级类型  ">
         <el-select v-model="formInline.type"
-                   placeholder="用户类型 "
+                   placeholder="下级类型 "
                    @change="onSubmit">
-          <el-option label="普通用户 "
+          <el-option label="直推  "
                      value="1"></el-option>
-          <el-option label="平台用户"
+          <el-option label="下级发展的"
                      value="2"></el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item label="上级的等级">
+        <el-input v-model="formInline.masterRank"
+                  placeholder="上级的等级"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary"
@@ -45,64 +41,56 @@
     </el-form>
 
     <el-table :data="tableData">
-      <!-- 用户信息 -->
+      <!-- 用户团队 -->
       <el-table-column prop="id"
                        label="id"
                        width="250"></el-table-column>
-      <el-table-column prop="name"
-                       label="昵称"
+      <el-table-column prop="userId"
+                       label="用户id"
                        width="200"></el-table-column>
-      <el-table-column prop="phone"
-                       label="电话"
+      <el-table-column prop="leekId"
+                       label="下级id"
                        width="150"></el-table-column>
-      <el-table-column label="头像"
+      <el-table-column label="下级头像"
                        width="150">
         <template slot-scope="scope"><img v-image-preview
                style="width: 35px; height: 35px"
-               :src="scope.row.img"
+               :src="scope.row.leekImg"
                fit="fill" /></template>
       </el-table-column>
-      <el-table-column prop="rank"
-                       label="等级"
+      <el-table-column prop="leekName"
+                       label="下级姓名"
                        width="150"></el-table-column>
-      <el-table-column prop="status"
-                       label="用户状态"
+      <el-table-column prop="leekPhone"
+                       label="下级电话"
+                       width="150"></el-table-column>
+      <el-table-column prop="leekRank"
+                       label="下级等级"
+                       width="150"></el-table-column>
+      <el-table-column prop="leekStatus"
+                       label="下级状态"
+                       width="150"></el-table-column>
+      <el-table-column label="下级创建时间"
+                       width="150">
+        <template slot-scope="scope">{{ parseTime(scope.row.leekTime) }}</template>
+      </el-table-column>
+      <el-table-column prop="leekWechat"
+                       label="下级微信号码"
                        width="150"></el-table-column>
       <el-table-column prop="type"
-                       label="用户类型"
+                       label="下级状态"
                        width="150"></el-table-column>
-      <el-table-column prop="wechatCode"
-                       label="微信号码"
+      <el-table-column prop="masterRank"
+                       label="上级的等级"
                        width="150"></el-table-column>
-      <el-table-column label="创建时间"
-                       width="150">
-        <template slot-scope="scope">{{ parseTime(scope.row.time) }}</template>
-      </el-table-column>
 
-      <!-- 推荐人信息 -->
-      <el-table-column prop="masterId"
-                       label="推荐人id"
-                       width="150"></el-table-column>
-      <el-table-column prop="masterName"
-                       label="推荐人姓名"
-                       width="150"></el-table-column>
-      <el-table-column label="头像"
-                       width="150">
-        <template slot-scope="scope"><img v-image-preview
-               style="width: 35px; height: 35px"
-               :src="scope.row.masterImg"
-               fit="fill" /></template>
-      </el-table-column>
-      <el-table-column prop="masterPhone"
-                       label="推荐人电话"
-                       width="170"></el-table-column>
       <el-table-column fixed="right"
                        label="操作"
                        width="120">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="showList(scope.row.openid)"
+          <!-- <el-button @click.native.prevent="showList(scope.row.openid)"
                      type="text"
-                     size="small">更改当前用户状态</el-button>
+                     size="small">更改当前用户状态</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -141,7 +129,7 @@
 </template>
 
 <script>
-import { getUserList, getClassById, delUser } from "@/api/user";
+import { getUserTeam, delUserTeam } from "@/api/team";
 import { parseTime } from "@/utils/index"
 
 export default {
@@ -149,7 +137,6 @@ export default {
   data () {
     return {
       tableData: [],
-      payclass: [],
       currentPage4: 1,
       showView: false,
       pageindex: 0, // 当前页
@@ -157,16 +144,17 @@ export default {
       total: 0, // 数量总条数
       // 搜索内容
       formInline: {
-        status: null,
+        userId: null,
+        leekId: null,
+        leekRank: null,
         type: null,
-        rank: null,
-        id: null,
-        phone: null
-      },
+        masterRank: null,
+        leekStatus: null
+      }
     }
   },
   mounted () {
-    this.getUserList()
+    this.getUserTeam()
   },
 
   created () {
@@ -177,31 +165,32 @@ export default {
     handleSizeChange (e) {
       // console.log('当前每页数量', e)
       this.pageSize = e
-      this.getUserList()
+      this.getUserTeam()
     },
     // 分页改变 e点击的页码  用户手动输入了页面然后go
     handleCurrentChange (e) {
       // console.log('当前页码', e)
       this.pageindex = e - 1
-      this.getUserList()
+      this.getUserTeam()
     },
     // 搜索
     onSubmit () {
-      this.getUserList()
+      this.getUserTeam()
     },
     // 获取用户列表
-    getUserList () {
+    getUserTeam () {
       let query = {
         pageIndex: this.pageindex,
         pageSize: this.pageSize,
-        rank: this.formInline.rank,
-        id: this.formInline.id,
-        phone: this.formInline.phone,
-        status: this.formInline.status,
-        type: this.formInline.type
+        userId: this.formInline.userId,
+        leekId: this.formInline.leekId,
+        leekRank: this.formInline.leekRank,
+        masterRank: this.formInline.masterRank,
+        type: this.formInline.type,
+        leekStatus: this.formInline.leekStatus
       }
-      getUserList(query).then(res => {
-        console.log('获取到的用户列表', res)
+      getUserTeam(query).then(res => {
+        console.log('获取到的团队列表', res)
         this.tableData = res.data
         this.total = res.pageTotal
       })
@@ -209,11 +198,11 @@ export default {
     // 格式化时间
     parseTime (time) {
       return parseTime(time)
-    },
-    toPut (id) {
-      console.log(id)
-      this.$router.push({ path: 'userClass/put/' + id })
     }
+    // toPut (id) {
+    //   console.log(id)
+    //   this.$router.push({ path: 'userClass/put/' + id })
+    // }
 
   }
 }

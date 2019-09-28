@@ -84,7 +84,7 @@ export default {
     handleLogin() {
       this.loading = true
       console.log(this.loginForm)
-      this.$store.dispatch('user/login', this.loginForm).then(() => {  
+      this.$store.dispatch('user/login', this.loginForm).then(() => {
         this.$router.replace({ path: '/dashboard' })
         this.loading = false
       }).catch((res) => {
