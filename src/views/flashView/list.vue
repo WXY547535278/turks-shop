@@ -259,7 +259,7 @@ export default {
       return parseTime(time)
     },
 
-    //
+    // 删除轮播图
     deleteThis (id) {
       deleteFlashView(id).then(res => {
         if (res.code === '200') {
@@ -267,12 +267,12 @@ export default {
             type: 'success',
             message: '操作成功!'
           })
-          this.getFlashViewList();
+          this.getFlashViewList()
         } else {
           this.$message({
             type: 'warning',
             message: '操作失败'
-          });
+          })
         }
       })
     },

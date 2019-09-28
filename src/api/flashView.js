@@ -8,7 +8,7 @@ export function getFlashView(id) {
 }
 
 /**
- * 获取用户列表
+ * 获取轮播图列表
  * @param {obj} data 查询条件
  */
 export function getFlashViewList(query) {

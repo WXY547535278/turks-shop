@@ -111,6 +111,54 @@ export const constantRoutes = [{
             }
         }]
     },
+    // 投诉管理
+    {
+        path: '/complaint',
+        component: Layout,
+        redirect: '/complaint/list',
+        children: [{
+            path: 'complaintlist',
+            name: 'Complaintlist',
+            component: () =>
+                import ('@/views/complaint/list'),
+            meta: {
+                title: '投诉管理',
+                icon: 'dashboard'
+            }
+        }]
+    },
+    // 升级审核表
+    {
+        path: '/apply',
+        component: Layout,
+        redirect: '/apply/list',
+        children: [{
+            path: 'applylist',
+            name: 'Applylist',
+            component: () =>
+                import ('@/views/apply/list'),
+            meta: {
+                title: '升级审核',
+                icon: 'dashboard'
+            }
+        }]
+    },
+    // 升级订单表
+    {
+        path: '/order',
+        component: Layout,
+        redirect: '/order/list',
+        children: [{
+            path: 'orderlist',
+            name: 'Orderlist',
+            component: () =>
+                import ('@/views/order/list'),
+            meta: {
+                title: '升级订单',
+                icon: 'dashboard'
+            }
+        }]
+    },
     // 例子模板
     {
         path: '/example',
