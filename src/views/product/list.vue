@@ -70,9 +70,9 @@
                        label="操作"
                        width="120">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="showOrderDetail(scope.row.id)"
+          <el-button @click.native.prevent="showProductDetail(scope.row.id)"
                      type="text"
-                     size="small">查看订单详情</el-button>
+                     size="small">查看产品详情</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -89,35 +89,25 @@
       </el-pagination>
     </div>
 
-    <!-- 查看订单详情  -->
+    <!-- 查看产品详情  -->
     <el-dialog title="操作"
                :visible.sync="showView"
                width="80%">
-      <el-table :data="orderDetail">
+      <el-table :data="productDetail">
         <el-table-column prop="id"
-                         label="id"
+                         label="规格id"
                          width="300"></el-table-column>
         <el-table-column prop="productId"
                          label="产品id"
                          width="300"></el-table-column>
         <el-table-column prop="name"
-                         label="产品名"
+                         label="名称"
                          width="300"></el-table-column>
-        <el-table-column label="图片"
-                         width="150">
-          <template slot-scope="scope"><img v-image-preview
-                 style="width: 35px; height: 35px"
-                 :src="scope.row.banner"
-                 fit="fill" /></template>
-        </el-table-column>
-        <el-table-column prop="skuId"
-                         label="规格id"
+        <el-table-column prop="sales"
+                         label="销量"
                          width="300"></el-table-column>
-        <el-table-column prop="skuName"
-                         label="规格名"
-                         width="300"></el-table-column>
-        <el-table-column prop="num"
-                         label="购买数量"
+        <el-table-column prop="stock"
+                         label="库存"
                          width="300"></el-table-column>
         <el-table-column prop="price"
                          label="价格"
@@ -129,17 +119,17 @@
 </template>
 
 <script>
-import { getOrderList, getOrderDetail, } from "@/api/order";
+import { getProductList, getSku, } from "@/api/product";
 import { parseTime } from "@/utils/index"
 
 export default {
-  name: 'userlist',
+  name: 'Productlist',
   data () {
     return {
       tableData: [],
       currentPage4: 1,
       showView: false,
-      orderDetail: null,
+      productDetail: null,
       putForm: {
         id: null,
         status: null
@@ -149,16 +139,14 @@ export default {
       total: 0, // 数量总条数
       // 搜索内容
       formInline: {
-        leekId: null,
-        shopId: null,
-        status: null,
-        rank: null,
-        deliveryType: null
+        userId: null,
+        id: null,
+        status: null
       }
     }
   },
   mounted () {
-    this.getOrderList()
+    this.getProductList()
   },
 
   created () {
@@ -166,42 +154,40 @@ export default {
 
   methods: {
     // 查看订单详情
-    showOrderDetail (orderId) {
+    showProductDetail (orderId) {
       this.showView = true
-      console.log('获取到的订单id', orderId)
-      getOrderDetail(orderId).then(res => {
-        console.log('获取订单详情', res)
-        this.orderDetail = res.data
+      console.log('获取到的产品id', orderId)
+      getSku(orderId).then(res => {
+        console.log('获产品详情', res)
+        this.productDetail = res.data
       })
     },
     // 选择当前页面显示多少条数据的选择框发生改变
     handleSizeChange (e) {
       // console.log('当前每页数量', e)
       this.pageSize = e
-      this.getOrderList()
+      this.getProductList()
     },
     // 分页改变 e点击的页码  用户手动输入了页面然后go
     handleCurrentChange (e) {
       // console.log('当前页码', e)
       this.pageindex = e - 1
-      this.getOrderList()
+      this.getProductList()
     },
     // 搜索
     onSubmit () {
-      this.getOrderList()
+      this.getProductList()
     },
     // 获取订单列表
-    getOrderList () {
+    getProductList () {
       let query = {
         pageIndex: this.pageindex,
         pageSize: this.pageSize,
         status: this.formInline.status,
-        leekId: this.formInline.leekId,
-        deliveryType: this.formInline.deliveryType,
-        shopId: this.formInline.shopId,
-        rank: this.formInline.rank
+        id: this.formInline.leekId,
+        userId: this.formInline.userId,
       }
-      getOrderList(query).then(res => {
+      getProductList(query).then(res => {
         console.log('获取订单列表', res)
         this.tableData = res.data
         this.total = res.pageTotal
