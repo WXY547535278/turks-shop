@@ -19,13 +19,11 @@
                        label="类型名"
                        width="100"></el-table-column>
 
-        <el-table-column prop="sort"
-                       label="排序序号"
-                       width="500"></el-table-column>
+      <el-table-column prop="sort"
+                       label="排序序号"></el-table-column>
 
       <el-table-column fixed="right"
-                       label="操作"
-                       >
+                       label="操作">
         <template slot-scope="scope">
           <el-button @click.native.prevent="showPut(scope.row.id)"
                      type="text"
@@ -53,7 +51,7 @@
       </el-pagination>
     </div>
 
-    <!--  新增区  -->
+    <!--  新增图库类型区  -->
     <el-dialog title="列表"
                :visible.sync="postView"
                width="80%">
@@ -80,7 +78,57 @@
       </el-form>
 
     </el-dialog>
+    <!--  为对应的图库类型添加图片  -->
+    <el-dialog title="列表"
+               :visible.sync="addImage"
+               width="80%">
+      <el-form ref="form"
+               :model="postForm1"
+               label-width="120px">
+        <el-form-item label="排序序号:">
+          <el-input v-model="postForm1.sort"
+                    style="width: auto;"
+                    type="nummber" />
+        </el-form-item>
+        <el-form-item label="跳转链接:">
+          <el-input v-model="postForm1.param"
+                    style="width: auto;" />
+        </el-form-item>
+        <el-form-item label="描述:">
+          <el-input v-model="postForm1.text"
+                    type="textarea"
+                    style="width: auto;" />
+        </el-form-item>
+        <el-form-item label="图片:">
+          <template>
+            <img style="width: 100px; height: 100px"
+                 :src="postForm1.img"
+                 fit="fill" />
+          </template>
 
+          <el-upload class="upload-demo"
+                     :action="upload_url"
+                     :headers="upload_head"
+                     :multiple=false
+                     :limit=1
+                     :on-success="upload_success_banner"
+                     :file-list="fileList">
+            <el-button size="small"
+                       type="primary">点击上传</el-button>
+            <div slot="tip"
+                 class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          </el-upload>
+
+        </el-form-item>
+        <hr>
+        <el-form-item>
+          <el-button type="primary"
+                     @click="postThis1(postForm1)">保存</el-button>
+        </el-form-item>
+
+      </el-form>
+
+    </el-dialog>
     <!--  修改区  -->
     <el-dialog title="列表"
                :visible.sync="putView"
@@ -120,8 +168,8 @@
 </template>
 
 <script>
-import { getGalleryTypeList, deleteGalleryType, putGalleryType, postGalleryType } from "@/api/galleryType";
-import { parseTime } from "@/utils/index"
+import { getGalleryTypeList, deleteGalleryType, putGalleryType, postGalleryType } from '@/api/galleryType'
+import { postGallery } from '@/api/gallery'
 import { getUploadUrl } from '@/utils/index'
 import { getToken } from '@/utils/auth.js'
 
@@ -140,6 +188,14 @@ export default {
       total: 0, // 数量总条数
       status: null,
       postView: false,
+      addImage: false,
+      postForm1: {
+        img: null,
+        text: null,
+        sort: null,
+        param: null,
+        typeId: null
+      },
       postForm: {
         sort: null,
         name: null
@@ -155,13 +211,45 @@ export default {
     }
   },
 
-
   mounted () {
     this.getGalleryTypeList()
   },
 
-
   methods: {
+    // 为对应图库类型添加图片
+    addThis(typeId) {
+      console.log('对应的类型id', typeId)
+      this.addImage = true
+      this.postForm1.sort = null
+      this.postForm1.img = null
+      this.postForm1.text = null
+      this.postForm1.typeId = typeId
+      this.postForm1.param = null
+    },
+    postThis1 (data) {
+      postGallery(data).then(res => {
+        this.$message({
+          type: 'success',
+          message: '新增成功!'
+        })
+        this.addImage = false
+        this.getGalleryTypeList()
+      }).catch(() => {
+        this.$message({
+          type: 'warning',
+          message: '新增失败'
+        })
+      })
+    },
+    //处理banner上传图片
+    upload_success_banner (response, file, fileList) {
+      if (file.response.code === '200') {
+        this.fileList = []
+        this.postForm1.img = file.response.data
+      } else {
+        this.$message.error('上传错误!请重试')
+      }
+    },
     // 选择当前页面显示多少条数据的选择框发生改变
     handleSizeChange (e) {
       this.pageSize = e
