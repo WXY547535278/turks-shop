@@ -8,13 +8,25 @@
         <el-input v-model="formInline.id"
                   placeholder="id"></el-input>
       </el-form-item>
-      <el-form-item label="用户id">
+      <el-form-item label="上级id">
         <el-input v-model="formInline.userId"
-                  placeholder="用户id"></el-input>
+                  placeholder="上级id"></el-input>
       </el-form-item>
-      <el-form-item label="下级用户id">
+      <el-form-item label="下级id">
         <el-input v-model="formInline.leekId"
-                  placeholder="下级用户id"></el-input>
+                  placeholder="下级id"></el-input>
+      </el-form-item>
+      <el-form-item label="下级在组织中等级">
+        <el-input v-model="formInline.rank"
+                  placeholder="下级在组织中等级"></el-input>
+      </el-form-item>
+      <el-form-item label="下级电话">
+        <el-input v-model="formInline.leekPhone"
+                  placeholder="下级电话"></el-input>
+      </el-form-item>
+      <el-form-item label="下级状态">
+        <el-input v-model="formInline.leekStatus"
+                  placeholder="下级状态"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary"
@@ -23,25 +35,38 @@
     </el-form>
 
     <el-table :data="tableData">
-      <!-- 帮助注册信息 -->
+      <!-- 组织架构信息 -->
       <el-table-column prop="id"
                        label="id"
                        width="250"></el-table-column>
       <el-table-column prop="userId"
-                       label="用户id"
+                       label="上级id"
                        width="200"></el-table-column>
       <el-table-column prop="leekId"
-                       label="下级用户id"
+                       label="下级id"
                        width="150"></el-table-column>
       <el-table-column prop="leekName"
                        label="下级名字"
                        width="150"></el-table-column>
+      <el-table-column label="下级头像"
+                       width="150">
+        <template slot-scope="scope"><img v-image-preview
+               style="width: 35px; height: 35px"
+               :src="scope.row.leekImg"
+               fit="fill" /></template>
+      </el-table-column>
       <el-table-column prop="leekPhone"
                        label="下级手机号"
                        width="150"></el-table-column>
       <el-table-column prop="leekWechat"
                        label="下级微信"
                        width="150"></el-table-column>
+      <el-table-column prop="leekStatus"
+                       label="下级状态"
+                       width="150"></el-table-column>
+      <el-table-column prop="rank"
+                       label="下级在组织中等级"
+                       width="150"></el-table-column>             
       <el-table-column label="注册时间"
                        width="150">
         <template slot-scope="scope">{{ parseTime(scope.row.time) }}</template>
@@ -61,28 +86,11 @@
       </el-pagination>
     </div>
 
-    <!--  查看区域  -->
-    <!-- <el-dialog title="用户购买课程列表"
-               :visible.sync="showView"
-               width="80%">
-      <el-table :data="payclass">
-        <el-table-column prop="id"
-                         label="课程id"
-                         width="300"></el-table-column>
-        <el-table-column prop="name"
-                         label="课程名称"
-                         width="300"></el-table-column>
-        <el-table-column prop="price"
-                         label="课程价格"
-                         width="300"></el-table-column>
-      </el-table>
-    </el-dialog> -->
-
   </div>
 </template>
 
 <script>
-import { getdragDownList } from "@/api/dragDown";
+import { getTreeList } from "@/api/tree";
 import { parseTime } from "@/utils/index"
 
 export default {
@@ -99,12 +107,15 @@ export default {
       formInline: {
         userId: null,
         id: null,
-        leekId: null
+        leekId: null,
+        rank: null,
+        leekPhone: null,
+        leekStatus: null
       }
     }
   },
   mounted () {
-    this.getdragDownList()
+    this.getTreeList()
   },
 
   created () {
@@ -115,29 +126,32 @@ export default {
     handleSizeChange (e) {
       // console.log('当前每页数量', e)
       this.pageSize = e
-      this.getdragDownList()
+      this.getTreeList()
     },
     // 分页改变 e点击的页码  用户手动输入了页面然后go
     handleCurrentChange (e) {
       // console.log('当前页码', e)
       this.pageindex = e - 1
-      this.getdragDownList()
+      this.getTreeList()
     },
     // 搜索
     onSubmit () {
-      this.getdragDownList()
+      this.getTreeList()
     },
     // 获取用户列表
-    getdragDownList () {
+    getTreeList () {
       let query = {
         pageIndex: this.pageindex,
         pageSize: this.pageSize,
         userId: this.formInline.userId,
         id: this.formInline.id,
-        leekId: this.formInline.leekId
+        leekId: this.formInline.leekId,
+        leekPhone: this.formInline.leekPhone,
+        rank: this.formInline.rank,
+        leekStatus: this.formInline.leekStatus
       }
-      getdragDownList(query).then(res => {
-        console.log('获取到的帮助注册列表', res)
+      getTreeList(query).then(res => {
+        console.log('获取到的组织架构列表', res)
         this.tableData = res.data
         this.total = res.pageTotal
       })

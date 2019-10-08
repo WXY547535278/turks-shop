@@ -272,6 +272,22 @@ export const constantRoutes = [{
             }
         }]
     },
+    // 组织架构
+    {
+        path: '/tree',
+        component: Layout,
+        redirect: '/tree/list',
+        children: [{
+            path: 'treelist',
+            name: 'Treelist',
+            component: () =>
+                import ('@/views/tree/list'),
+            meta: {
+                title: '组织架构',
+                icon: 'dashboard'
+            }
+        }]
+    },
     // 404 page must be placed at the end !!!
     {
         path: '*',
