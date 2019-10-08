@@ -67,7 +67,7 @@
       <el-table-column prop="rank"
                        label="下级在组织中等级"
                        width="150"></el-table-column>             
-      <el-table-column label="注册时间"
+      <el-table-column label="加入组织时间"
                        width="150">
         <template slot-scope="scope">{{ parseTime(scope.row.time) }}</template>
       </el-table-column>
