@@ -8,22 +8,24 @@
         <el-input v-model="formInline.id"
                   placeholder="id"></el-input>
       </el-form-item>
-      <el-form-item label="电话 ">
-        <el-input v-model="formInline.userPhone"
-                  placeholder="电话 "></el-input>
+      <el-form-item label="订单id">
+        <el-input v-model="formInline.orderId"
+                  placeholder="订单id "></el-input>
       </el-form-item>
       <el-form-item label="用户id">
         <el-input v-model="formInline.userId"
                   placeholder="用户id"></el-input>
       </el-form-item>
-      <el-form-item label="发送状态  ">
-        <el-select v-model="formInline.status"
-                   placeholder="发送状态 "
+      <el-form-item label="评价类型">
+        <el-select v-model="formInline.type"
+                   placeholder="评价类型 "
                    @change="onSubmit">
-          <el-option label="失败  "
-                     value="0"></el-option>
-          <el-option label="成功"
+          <el-option label="好评   "
                      value="1"></el-option>
+          <el-option label="中评 "
+                     value="2"></el-option>
+          <el-option label="差评 "
+                     value="3"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -33,37 +35,24 @@
     </el-form>
 
     <el-table :data="tableData">
-      <!-- 短信信息 -->
+      <!-- 评价列表 -->
       <el-table-column prop="id"
                        label="id"
                        width="250"></el-table-column>
       <el-table-column prop="userId"
                        label="用户id"
                        width="200"></el-table-column>
-      <el-table-column prop="userName"
-                       label="用户名"
+      <el-table-column prop="orderId"
+                       label="订单id"
                        width="200"></el-table-column>
-      <el-table-column prop="userPhone"
-                       label="电话"
+      <el-table-column prop="type"
+                       label="评价类型"
                        width="150"></el-table-column>
-      <el-table-column prop="status"
-                       label="发送状态"
-                       width="150"></el-table-column>
-      <el-table-column label="头像"
-                       width="150">
-        <template slot-scope="scope"><img v-image-preview
-               style="width: 35px; height: 35px"
-               :src="scope.row.userImg"
-               fit="fill" /></template>
-      </el-table-column>
-      <el-table-column prop="param"
-                       label="短信内容"
-                       width="150"></el-table-column>
-      <el-table-column label="发送时间"
+      <el-table-column label="评价时间"
                        width="150">
         <template slot-scope="scope">{{ parseTime(scope.row.time) }}</template>
       </el-table-column>
-      <el-table-column fixed="right"
+      <!-- <el-table-column fixed="right"
                        label="操作"
                        width="120">
         <template slot-scope="scope">
@@ -71,7 +60,7 @@
                      type="text"
                      size="small">查看详情</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     <!-- 分页区 -->
 
@@ -86,34 +75,11 @@
                      :total="total">
       </el-pagination>
     </div>
-
-    <!--  查看区域  -->
-    <el-dialog title="短信内容"
-               :visible.sync="showView"
-               width="80%">
-      <el-form ref="form"
-               :model="showMessage"
-               label-width="80px">
-        <el-form-item label="用户名">
-          <el-input v-model="showMessage.userName"
-                    style="width:300px"></el-input>
-        </el-form-item>
-        <el-form-item label="电话">
-          <el-input v-model="showMessage.userPhone"
-                    style="width:300px"></el-input>
-        </el-form-item>
-        <el-form-item label="短信内容">
-          <el-input type="textarea"
-                    v-model="showMessage.param"
-                    style="width:400px"></el-input>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getMessageList, getMessageById, delMessage } from "@/api/message";
+import { getEvaluateList } from "@/api/evaluate";
 import { parseTime } from "@/utils/index"
 
 export default {
@@ -123,70 +89,54 @@ export default {
       tableData: [],
       payclass: [],
       currentPage4: 1,
-      showView: false,
       pageindex: 0, // 当前页
       pageSize: 10, // 每页数量
       total: 0, // 数量总条数
       // 搜索内容
       formInline: {
-        status: null,
+        type: null,
         userId: null,
-        userPhone: null,
+        orderId: null,
         id: null
       },
-      showMessage: {
-        userName: null,
-        userPhone: null,
-        param: null
-      }
     }
   },
   mounted () {
-    this.getMessageList()
+    this.getEvaluateList()
   },
 
   created () {
   },
 
   methods: {
-    showList (id) {
-      this.showView = true
-      getMessageById(id).then(res => {
-        console.log('获取到的短信列表', this.tableData)
-        this.showMessage.userName = res.data.userName
-        this.showMessage.userPhone = res.data.userPhone
-        this.showMessage.param = res.data.param
-      })
-      console.log('获取到的短信id', id)
-    },
     // 选择当前页面显示多少条数据的选择框发生改变
     handleSizeChange (e) {
       // console.log('当前每页数量', e)
       this.pageSize = e
-      this.getMessageList()
+      this.getEvaluateList()
     },
     // 分页改变 e点击的页码  用户手动输入了页面然后go
     handleCurrentChange (e) {
       // console.log('当前页码', e)
       this.pageindex = e - 1
-      this.getMessageList()
+      this.getEvaluateList()
     },
     // 搜索
     onSubmit () {
-      this.getMessageList()
+      this.getEvaluateList()
     },
     // 获取用户列表
-    getMessageList () {
+    getEvaluateList () {
       let query = {
         pageIndex: this.pageindex,
         pageSize: this.pageSize,
-        status: this.formInline.status,
+        type: this.formInline.type,
         id: this.formInline.id,
         userId: this.formInline.userId,
-        userPhone: this.formInline.userPhone
+        orderId: this.formInline.orderId
       }
-      getMessageList(query).then(res => {
-        console.log('获取到的短信列表', res)
+      getEvaluateList(query).then(res => {
+        console.log('获取到的评价列表', res.data)
         this.tableData = res.data
         this.total = res.pageTotal
       })

@@ -4,27 +4,9 @@
     <el-form :inline="true"
              :model="formInline"
              class="demo-form-inline">
-      <el-form-item label="id">
-        <el-input v-model="formInline.id"
-                  placeholder="id"></el-input>
-      </el-form-item>
-      <el-form-item label="电话 ">
-        <el-input v-model="formInline.userPhone"
-                  placeholder="电话 "></el-input>
-      </el-form-item>
       <el-form-item label="用户id">
         <el-input v-model="formInline.userId"
                   placeholder="用户id"></el-input>
-      </el-form-item>
-      <el-form-item label="发送状态  ">
-        <el-select v-model="formInline.status"
-                   placeholder="发送状态 "
-                   @change="onSubmit">
-          <el-option label="失败  "
-                     value="0"></el-option>
-          <el-option label="成功"
-                     value="1"></el-option>
-        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary"
@@ -33,36 +15,26 @@
     </el-form>
 
     <el-table :data="tableData">
-      <!-- 短信信息 -->
+      <!-- 地址列表 -->
       <el-table-column prop="id"
                        label="id"
                        width="250"></el-table-column>
       <el-table-column prop="userId"
                        label="用户id"
                        width="200"></el-table-column>
-      <el-table-column prop="userName"
-                       label="用户名"
+      <el-table-column prop="province"
+                       label="省"
                        width="200"></el-table-column>
-      <el-table-column prop="userPhone"
-                       label="电话"
-                       width="150"></el-table-column>
-      <el-table-column prop="status"
-                       label="发送状态"
-                       width="150"></el-table-column>
-      <el-table-column label="头像"
-                       width="150">
-        <template slot-scope="scope"><img v-image-preview
-               style="width: 35px; height: 35px"
-               :src="scope.row.userImg"
-               fit="fill" /></template>
-      </el-table-column>
-      <el-table-column prop="param"
-                       label="短信内容"
-                       width="150"></el-table-column>
-      <el-table-column label="发送时间"
-                       width="150">
-        <template slot-scope="scope">{{ parseTime(scope.row.time) }}</template>
-      </el-table-column>
+      <el-table-column prop="city"
+                       label="市"
+                       width="200"></el-table-column>
+      <el-table-column prop="area"
+                       label="区"
+                       width="200"></el-table-column>
+      <el-table-column prop="detail"
+                       label="详细地址"
+                       :show-overflow-tooltip="true"
+                       width="200"></el-table-column>
       <el-table-column fixed="right"
                        label="操作"
                        width="120">
@@ -86,25 +58,28 @@
                      :total="total">
       </el-pagination>
     </div>
-
     <!--  查看区域  -->
-    <el-dialog title="短信内容"
+    <el-dialog title="地址"
                :visible.sync="showView"
                width="80%">
       <el-form ref="form"
                :model="showMessage"
                label-width="80px">
-        <el-form-item label="用户名">
-          <el-input v-model="showMessage.userName"
-                    style="width:300px"></el-input>
+        <el-form-item label="省">
+          <el-input v-model="showMessage.province"
+                    style="width:auto"></el-input>
         </el-form-item>
-        <el-form-item label="电话">
-          <el-input v-model="showMessage.userPhone"
-                    style="width:300px"></el-input>
+        <el-form-item label="市">
+          <el-input v-model="showMessage.city"
+                    style="width:auto"></el-input>
         </el-form-item>
-        <el-form-item label="短信内容">
-          <el-input type="textarea"
-                    v-model="showMessage.param"
+        <el-form-item label="区">
+          <el-input v-model="showMessage.area"
+                    style="width:auto"></el-input>
+        </el-form-item>
+        <el-form-item label="地址详情">
+          <el-input type="text"
+                    v-model="showMessage.detail"
                     style="width:400px"></el-input>
         </el-form-item>
       </el-form>
@@ -113,7 +88,7 @@
 </template>
 
 <script>
-import { getMessageList, getMessageById, delMessage } from "@/api/message";
+import { getAddressList,getAddressById } from "@/api/address";
 import { parseTime } from "@/utils/index"
 
 export default {
@@ -122,27 +97,25 @@ export default {
     return {
       tableData: [],
       payclass: [],
-      currentPage4: 1,
       showView: false,
+      currentPage4: 1,
       pageindex: 0, // 当前页
       pageSize: 10, // 每页数量
       total: 0, // 数量总条数
       // 搜索内容
       formInline: {
-        status: null,
-        userId: null,
-        userPhone: null,
-        id: null
+        userId: null
       },
       showMessage: {
-        userName: null,
-        userPhone: null,
-        param: null
+        province: null,
+        city: null,
+        area: null,
+        detail: null
       }
     }
   },
   mounted () {
-    this.getMessageList()
+    this.getAddressList()
   },
 
   created () {
@@ -151,11 +124,12 @@ export default {
   methods: {
     showList (id) {
       this.showView = true
-      getMessageById(id).then(res => {
-        console.log('获取到的短信列表', this.tableData)
-        this.showMessage.userName = res.data.userName
-        this.showMessage.userPhone = res.data.userPhone
-        this.showMessage.param = res.data.param
+      getAddressById(id).then(res => {
+        console.log('获取到的地址列表', this.tableData)
+        this.showMessage.province = res.data.province
+        this.showMessage.city = res.data.city
+        this.showMessage.area = res.data.area
+        this.showMessage.detail = res.data.detail
       })
       console.log('获取到的短信id', id)
     },
@@ -163,38 +137,35 @@ export default {
     handleSizeChange (e) {
       // console.log('当前每页数量', e)
       this.pageSize = e
-      this.getMessageList()
+      this.getAddressList()
     },
     // 分页改变 e点击的页码  用户手动输入了页面然后go
     handleCurrentChange (e) {
       // console.log('当前页码', e)
       this.pageindex = e - 1
-      this.getMessageList()
+      this.getAddressList()
     },
     // 搜索
     onSubmit () {
-      this.getMessageList()
+      this.getAddressList()
     },
-    // 获取用户列表
-    getMessageList () {
+    // 获取地址列表
+    getAddressList () {
       let query = {
         pageIndex: this.pageindex,
         pageSize: this.pageSize,
-        status: this.formInline.status,
-        id: this.formInline.id,
-        userId: this.formInline.userId,
-        userPhone: this.formInline.userPhone
+        userId: this.formInline.userId
       }
-      getMessageList(query).then(res => {
-        console.log('获取到的短信列表', res)
+      getAddressList(query).then(res => {
+        console.log('获取地址列表', res.data)
         this.tableData = res.data
         this.total = res.pageTotal
       })
-    },
-    // 格式化时间
-    parseTime (time) {
-      return parseTime(time)
     }
+    // 格式化时间
+    // parseTime (time) {
+    //   return parseTime(time)
+    // }
   }
 }
 </script>

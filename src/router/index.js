@@ -192,143 +192,70 @@ export const constantRoutes = [{
             }
         }]
     },
-
-    // 例子模板
+    // 评价管理
     {
-        path: '/example',
+        path: '/evaluate',
         component: Layout,
-        redirect: '/example/table',
-        name: 'Example',
-        meta: {
-            title: 'Example',
-            icon: 'example'
-        },
+        redirect: '/evaluate/list',
         children: [{
-                path: 'table',
-                name: 'Table',
-                component: () =>
-                    import ('@/views/table/index'),
-                meta: {
-                    title: 'Table',
-                    icon: 'table'
-                }
-            },
-            {
-                path: 'tree',
-                name: 'Tree',
-                component: () =>
-                    import ('@/views/tree/index'),
-                meta: {
-                    title: 'Tree',
-                    icon: 'tree'
-                }
-            }
-        ]
-    },
-
-    {
-        path: '/form',
-        component: Layout,
-        children: [{
-            path: 'index',
-            name: 'Form',
+            path: 'evaluatelist',
+            name: 'Evaluatelist',
             component: () =>
-                import ('@/views/form/index'),
+                import ('@/views/evaluate/list'),
             meta: {
-                title: 'Form',
-                icon: 'form'
+                title: '评价',
+                icon: 'dashboard'
             }
         }]
     },
-
+    // 地址管理
     {
-        path: '/nested',
+        path: '/address',
         component: Layout,
-        redirect: '/nested/menu1',
-        name: 'Nested',
-        meta: {
-            title: 'Nested',
-            icon: 'nested'
-        },
+        redirect: '/address/list',
         children: [{
-                path: 'menu1',
-                component: () =>
-                    import ('@/views/nested/menu1/index'), // Parent router-view
-                name: 'Menu1',
-                meta: {
-                    title: 'Menu1'
-                },
-                children: [{
-                        path: 'menu1-1',
-                        component: () =>
-                            import ('@/views/nested/menu1/menu1-1'),
-                        name: 'Menu1-1',
-                        meta: {
-                            title: 'Menu1-1'
-                        }
-                    },
-                    {
-                        path: 'menu1-2',
-                        component: () =>
-                            import ('@/views/nested/menu1/menu1-2'),
-                        name: 'Menu1-2',
-                        meta: {
-                            title: 'Menu1-2'
-                        },
-                        children: [{
-                                path: 'menu1-2-1',
-                                component: () =>
-                                    import ('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                                name: 'Menu1-2-1',
-                                meta: {
-                                    title: 'Menu1-2-1'
-                                }
-                            },
-                            {
-                                path: 'menu1-2-2',
-                                component: () =>
-                                    import ('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                                name: 'Menu1-2-2',
-                                meta: {
-                                    title: 'Menu1-2-2'
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        path: 'menu1-3',
-                        component: () =>
-                            import ('@/views/nested/menu1/menu1-3'),
-                        name: 'Menu1-3',
-                        meta: {
-                            title: 'Menu1-3'
-                        }
-                    }
-                ]
-            },
-            {
-                path: 'menu2',
-                component: () =>
-                    import ('@/views/nested/menu2/index'),
-                meta: {
-                    title: 'menu2'
-                }
-            }
-        ]
-    },
-
-    {
-        path: 'external-link',
-        component: Layout,
-        children: [{
-            path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
+            path: 'addresslist',
+            name: 'Addresslist',
+            component: () =>
+                import ('@/views/address/list'),
             meta: {
-                title: 'External Link',
-                icon: 'link'
+                title: '用户地址',
+                icon: 'dashboard'
             }
         }]
     },
-
+    // 图库类型
+    {
+        path: '/galleryType',
+        component: Layout,
+        redirect: '/galleryType/list',
+        children: [{
+            path: 'galleryTypelist',
+            name: 'GalleryTypelist',
+            component: () =>
+                import ('@/views/galleryType/list'),
+            meta: {
+                title: '图库类型',
+                icon: 'dashboard'
+            }
+        }]
+    },
+    // 图库
+    {
+        path: '/gallery',
+        component: Layout,
+        redirect: '/gallery/list',
+        children: [{
+            path: 'gallerylist',
+            name: 'Gallerylist',
+            component: () =>
+                import ('@/views/gallery/list'),
+            meta: {
+                title: '图库',
+                icon: 'dashboard'
+            }
+        }]
+    },
     // 404 page must be placed at the end !!!
     {
         path: '*',
