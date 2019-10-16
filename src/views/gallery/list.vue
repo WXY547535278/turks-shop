@@ -39,10 +39,18 @@
       <el-table-column prop="param"
                        label="跳转url"
                        width="200"></el-table-column>
-      <el-table-column prop="text"
-                       label="描述"
-                       width="500"></el-table-column>
-
+      <el-table-column prop="text.name"
+                       label="昵称"
+                       width="100"></el-table-column>
+      <el-table-column prop="text.phone"
+                       label="电话"
+                       width="150"></el-table-column>
+      <el-table-column prop="text.wx"
+                       label="微信"
+                       width="150"></el-table-column>
+      <el-table-column prop="text.bz"
+                       label="备注"
+                       width="200"></el-table-column>
       <el-table-column fixed="right"
                        label="操作"
                        width="120">
@@ -153,12 +161,27 @@
           <el-input v-model="putForm.param"
                     style="width: auto;" />
         </el-form-item>
-        <el-form-item label="描述">
+        <!-- <el-form-item label="描述">
           <el-input v-model="putForm.text"
                     type="textarea"
                     style="width: auto;" />
+        </el-form-item> -->
+        <el-form-item label="昵称">
+          <el-input v-model="text.name"
+                    style="width: auto;" />
         </el-form-item>
-
+        <el-form-item label="电话">
+          <el-input v-model="text.phone"
+                    style="width: auto;" />
+        </el-form-item>
+        <el-form-item label="微信">
+          <el-input v-model="text.wx"
+                    style="width: auto;" />
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="text.bz"
+                    style="width: auto;" />
+        </el-form-item>
         <el-form-item label="图片:">
           <template>
             <img style="width: 100px; height: 100px"
@@ -235,16 +258,19 @@ export default {
         sort: null,
         param: null,
         typeId: null
+      },
+      text: {
+        wx: null,
+        phone: null,
+        name: null,
+        bz: null
       }
-
     }
   },
-
 
   mounted () {
     this.getGalleryList()
   },
-
 
   methods: {
     // 选择当前页面显示多少条数据的选择框发生改变
@@ -270,8 +296,13 @@ export default {
         typeId: this.formInline.typeId
       }
       getGalleryList(query).then(res => {
-        // console.log(res)
-        this.tableData = res.data
+        console.log('获取到的图库', res)
+        this.tableData = res.data.map(item => {
+          item.text = JSON.parse(item.text)
+          return item
+        })
+        // console.log(this.tableData)
+        // this.tableData = res.data
         this.total = res.pageTotal
       })
     },
@@ -346,10 +377,16 @@ export default {
       this.putForm.sort = thisBean.sort
       this.putForm.param = thisBean.param
       this.putForm.text = thisBean.text
+      // 获取text中的json字段
+      this.text.name = thisBean.text.name
+      this.text.wx = thisBean.text.wx
+      this.text.phone = thisBean.text.phone
+      this.text.bz = thisBean.text.bz
       this.putForm.typeId = thisBean.typeId
     },
     putThis (data) {
-
+      data.text = this.text
+      console.log(data)
       putGallery(data).then(res => {
         this.$message({
           type: 'success',

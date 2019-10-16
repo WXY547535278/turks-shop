@@ -56,14 +56,14 @@
                        width="150">
         <template slot-scope="scope"><img v-image-preview
                style="width: 35px; height: 35px"
-               :src="scope.row.bannerOne"
+               :src="JSON.parse(scope.row.bannerOne)[0]"
                fit="fill" /></template>
       </el-table-column>
       <el-table-column label="详情图片"
                        width="150">
         <template slot-scope="scope"><img v-image-preview
                style="width: 35px; height: 35px"
-               :src="scope.row.detail"
+               :src="JSON.parse(scope.row.detail)[0]"
                fit="fill" /></template>
       </el-table-column>
       <el-table-column fixed="right"
@@ -185,7 +185,7 @@ export default {
         pageSize: this.pageSize,
         status: this.formInline.status,
         id: this.formInline.leekId,
-        userId: this.formInline.userId,
+        userId: this.formInline.userId
       }
       getProductList(query).then(res => {
         console.log('获取订单列表', res)

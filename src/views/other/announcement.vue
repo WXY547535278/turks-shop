@@ -1,11 +1,12 @@
 <template>
   <div style="width:90%;margin-left:5%;margin-top:1%">
+    <!-- 搜索条件区域 -->
 
     <el-form :inline="true"
              class="demo-form-inline">
       <el-form-item style="float: right;">
         <el-button type="success"
-                   @click="showPost">新增轮播图</el-button>
+                   @click="showPost">新增公告</el-button>
       </el-form-item>
     </el-form>
 
@@ -13,21 +14,10 @@
       <el-table-column prop="id"
                        label="id"
                        width="250"></el-table-column>
-      <el-table-column label="图片"
-                       width="250">
-        <template slot-scope="scope"><img style="width: 100px; height: 100px"
-               :src="scope.row.img"
-               fit="fill" />
-        </template>
-      </el-table-column>
-      <el-table-column prop="sort"
-                       label="排序序号"
+      <el-table-column prop="text"
+                       :show-overflow-tooltip="true"
+                       label="公告"
                        width="500"></el-table-column>
-
-      <el-table-column prop="param"
-                       label="跳转url"
-                       width="100"></el-table-column>
-
       <el-table-column fixed="right"
                        label="操作"
                        width="120">
@@ -54,7 +44,6 @@
                      :total="total">
       </el-pagination>
     </div>
-
     <!--  新增区  -->
     <el-dialog title="列表"
                :visible.sync="postView"
@@ -62,7 +51,11 @@
       <el-form ref="form"
                :model="postForm"
                label-width="120px">
-
+        <el-form-item label="类型id:">
+          <el-input v-model="postForm.typeId"
+                    style="width: auto;"
+                    type="nummber" />
+        </el-form-item>
         <el-form-item label="排序序号:">
           <el-input v-model="postForm.sort"
                     style="width: auto;"
@@ -70,9 +63,14 @@
         </el-form-item>
         <el-form-item label="跳转链接:">
           <el-input v-model="postForm.param"
-                    style="width: auto;"/>
+                    style="width: auto;" />
         </el-form-item>
-        <el-form-item label="轮播图图像:">
+        <el-form-item label="描述:">
+          <el-input v-model="postForm.text"
+                    type="textarea"
+                    style="width: auto;" />
+        </el-form-item>
+        <el-form-item label="图片:">
           <template>
             <img style="width: 100px; height: 100px"
                  :src="postForm.img"
@@ -103,7 +101,6 @@
       </el-form>
 
     </el-dialog>
-
     <!--  修改区  -->
     <el-dialog title="列表"
                :visible.sync="putView"
@@ -111,14 +108,17 @@
       <el-form ref="form"
                :model="putForm"
                label-width="120px">
-
         <el-form-item label="id:">
           <el-input v-model="putForm.id"
                     style="width: auto;"
                     type="text"
                     :disabled="true" />
         </el-form-item>
-
+        <el-form-item label="类型id:">
+          <el-input v-model="putForm.typeId"
+                    style="width: auto;"
+                    type="text" />
+        </el-form-item>
         <el-form-item label="排序序号:">
           <el-input v-model="putForm.sort"
                     style="width: auto;"
@@ -128,7 +128,27 @@
           <el-input v-model="putForm.param"
                     style="width: auto;" />
         </el-form-item>
-
+        <!-- <el-form-item label="描述">
+          <el-input v-model="putForm.text"
+                    type="textarea"
+                    style="width: auto;" />
+        </el-form-item> -->
+        <el-form-item label="昵称">
+          <el-input v-model="text.name"
+                    style="width: auto;" />
+        </el-form-item>
+        <el-form-item label="电话">
+          <el-input v-model="text.phone"
+                    style="width: auto;" />
+        </el-form-item>
+        <el-form-item label="微信">
+          <el-input v-model="text.wx"
+                    style="width: auto;" />
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="text.bz"
+                    style="width: auto;" />
+        </el-form-item>
         <el-form-item label="图片:">
           <template>
             <img style="width: 100px; height: 100px"
@@ -163,9 +183,9 @@
 </template>
 
 <script>
-import { getFlashViewList, deleteFlashView, putFlashView, postFlashView } from "@/api/flashView";
+import { getOtherLists, delOther, putOther, postOther } from "@/api/other"
 import { parseTime } from "@/utils/index"
-import { getRequestUrl, getUploadUrl } from '@/utils/index'
+import { getUploadUrl } from '@/utils/index'
 import { getToken } from '@/utils/auth.js'
 
 
@@ -183,55 +203,63 @@ export default {
       pageindex: 0, // 当前页
       pageSize: 10, // 每页数量
       total: 0, // 数量总条数
-      status: null,
       postView: false,
-      postForm: {
-        sort: null,
-        img: null,
-        param: null
-      },
+      status: null,
       fileList: [],
       putView: false,
+      postForm: {
+        img: null,
+        text: null,
+        sort: null,
+        param: null,
+        typeId: null
+      },
       putForm: {
         id: null,
         img: null,
+        text: null,
         sort: null,
-        param: null
+        param: null,
+        typeId: null
+      },
+      text: {
+        wx: null,
+        phone: null,
+        name: null,
+        bz: null
       }
-
     }
   },
 
-
   mounted () {
-    this.getFlashViewList()
+    this.getOtherList()
   },
-
 
   methods: {
     // 选择当前页面显示多少条数据的选择框发生改变
     handleSizeChange (e) {
       this.pageSize = e
-      this.getFlashViewList()
+      this.getOtherList()
     },
     // 分页改变 e点击的页码  用户手动输入了页面然后go
     handleCurrentChange (e) {
       // console.log('当前页码', e)
       this.pageindex = e - 1
-      this.getFlashViewList()
+      this.getOtherList()
     },
     // 搜索
     onSubmit () {
-      this.getFlashViewList()
+      this.getOtherList()
     },
 
-    getFlashViewList () {
+    getOtherList () {
       let query = {
         pageIndex: this.pageindex,
-        pageSize: this.pageSize
+        pageSize: this.pageSize,
+        type: 1
       }
-      getFlashViewList(query).then(res => {
-        // console.log(res)
+      getOtherLists(query).then(res => {
+        console.log('获取到公告', res)
         this.tableData = res.data
         this.total = res.pageTotal
       })
@@ -243,13 +271,13 @@ export default {
 
     // 删除轮播图
     deleteThis (id) {
-      deleteFlashView(id).then(res => {
+      delOther(id).then(res => {
         if (res.code === '200') {
           this.$message({
             type: 'success',
             message: '操作成功!'
           })
-          this.getFlashViewList()
+          this.getOtherList()
         } else {
           this.$message({
             type: 'warning',
@@ -258,21 +286,23 @@ export default {
         }
       })
     },
-
     //新增相关
     showPost () {
       this.postView = true
       this.postForm.sort = null
       this.postForm.img = null
+      this.postForm.text = null
+      this.postForm.typeId = null
+      this.postForm.param = null
     },
     postThis (data) {
-      postFlashView(data).then(res => {
+      postGallery(data).then(res => {
         this.$message({
           type: 'success',
           message: '新增成功!'
         })
-        this.postView = false;
-        this.getFlashViewList()
+        this.postView = false
+        this.getGalleryList()
       }).catch(() => {
         this.$message({
           type: 'warning',
@@ -290,15 +320,13 @@ export default {
         this.$message.error('上传错误!请重试')
       }
     },
-
-
     //修改相关
     showPut (id) {
-      var thisBean = {};
+      var thisBean = {}
       for (var i = 0; i < this.tableData.length; i++) {
         if (id === this.tableData[i].id) {
           thisBean = this.tableData[i]
-          break;
+          break
         }
       }
       this.putView = true
@@ -306,16 +334,24 @@ export default {
       this.putForm.img = thisBean.img
       this.putForm.sort = thisBean.sort
       this.putForm.param = thisBean.param
+      this.putForm.text = thisBean.text
+      // 获取text中的json字段
+      this.text.name = thisBean.text.name
+      this.text.wx = thisBean.text.wx
+      this.text.phone = thisBean.text.phone
+      this.text.bz = thisBean.text.bz
+      this.putForm.typeId = thisBean.typeId
     },
     putThis (data) {
-
-      putFlashView(data).then(res => {
+      data.text = this.text
+      console.log(data)
+      putGallery(data).then(res => {
         this.$message({
           type: 'success',
           message: '修改成功!'
         })
-        this.putView = false;
-        this.getFlashViewList();
+        this.putView = false
+        this.getGalleryList()
       }).catch(() => {
         this.$message({
           type: 'warning',
@@ -326,9 +362,9 @@ export default {
     upload_success_put (response, file, fileList) {
       if (file.response.code === '200') {
         this.fileList = []
-        this.putForm.img = file.response.data;
+        this.putForm.img = file.response.data
       } else {
-        this.$message.error('上传错误!请重试');
+        this.$message.error('上传错误!请重试')
       }
     }
   }

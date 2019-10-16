@@ -304,6 +304,38 @@ export const constantRoutes = [{
             }
         }]
     },
+    // 用户管理
+    {
+        path: '/other',
+        component: Layout,
+        redirect: '/other/link',
+        name: 'Other',
+        meta: {
+            title: '其他',
+            icon: 'tree'
+        },
+        children: [{
+                path: 'linklist',
+                name: 'Linklist',
+                component: () =>
+                    import ('@/views/other/link'),
+                meta: {
+                    title: '友情链接',
+                    icon: 'dashboard'
+                }
+            },
+            {
+                path: 'announcement',
+                name: 'Announcement',
+                component: () =>
+                    import ('@/views/other/announcement'),
+                meta: {
+                    title: '公告',
+                    icon: 'dashboard'
+                }
+            }
+        ]
+    },
     // 404 page must be placed at the end !!!
     {
         path: '*',
