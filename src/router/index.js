@@ -65,16 +65,32 @@ export const constantRoutes = [{
         path: '/user',
         component: Layout,
         redirect: '/user/list',
+        name: 'Information',
+        meta: {
+            title: '用户管理',
+            icon: 'tree'
+        },
         children: [{
-            path: 'userlist',
-            name: 'Userlist',
-            component: () =>
-                import ('@/views/user/list'),
-            meta: {
-                title: '用户管理',
-                icon: 'dashboard'
+                path: 'userlist',
+                name: 'Userlist',
+                component: () =>
+                    import ('@/views/user/list'),
+                meta: {
+                    title: '普通用户',
+                    icon: 'dashboard'
+                }
+            },
+            {
+                path: 'platform',
+                name: 'Platform',
+                component: () =>
+                    import ('@/views/user/platform'),
+                meta: {
+                    title: '平台用户',
+                    icon: 'dashboard'
+                }
             }
-        }]
+        ]
     },
     // 轮播图
     {

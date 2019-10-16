@@ -16,7 +16,7 @@
         <el-input v-model="formInline.rank"
                   placeholder="等级"></el-input>
       </el-form-item>
-      <el-form-item label="用户状态 ">
+      <!-- <el-form-item label="用户状态 ">
         <el-select v-model="formInline.status"
                    placeholder="用户状态"
                    @change="onSubmit">
@@ -27,7 +27,7 @@
           <el-option label="永久停用"
                      value="3"></el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <!-- <el-form-item label="用户类型 ">
         <el-select v-model="formInline.type"
                    placeholder="用户类型 "
@@ -55,19 +55,6 @@
       <el-table-column prop="phone"
                        label="电话"
                        width="150"></el-table-column>
-      <el-table-column prop="sparePhone"
-                       label="备用手机号"
-                       width="150"></el-table-column>
-      <el-table-column prop="invitation"
-                       label="个人邀请码"
-                       width="150"></el-table-column>
-      <el-table-column label="邀请二维码"
-                       width="150">
-        <template slot-scope="scope"><img v-image-preview
-               style="width: 35px; height: 35px"
-               :src="scope.row.qrCode"
-               fit="fill" /></template>
-      </el-table-column>
       <el-table-column label="头像"
                        width="150">
         <template slot-scope="scope"><img v-image-preview
@@ -78,43 +65,22 @@
       <el-table-column prop="rank"
                        label="等级"
                        width="150"></el-table-column>
-      <el-table-column prop="status"
+      <!-- <el-table-column prop="status"
                        label="用户状态"
                        width="150"></el-table-column>
       <el-table-column prop="type"
                        label="用户类型"
-                       width="150"></el-table-column>
+                       width="150"></el-table-column> -->
       <el-table-column prop="wechatCode"
                        label="微信号码"
                        width="150"></el-table-column>
-      <el-table-column label="微信头像"
-                       width="150">
-        <template slot-scope="scope"><img v-image-preview
-               style="width: 35px; height: 35px"
-               :src="scope.row.wechatImg"
-               fit="fill" /></template>
-      </el-table-column>
-      <el-table-column label="店铺二维码"
-                       width="150">
-        <template slot-scope="scope"><img v-image-preview
-               style="width: 35px; height: 35px"
-               :src="scope.row.shopQrCode"
-               fit="fill" /></template>
-      </el-table-column>
-      <el-table-column prop="zfb"
-                       label="支付宝号"
-                       width="150"></el-table-column>
-      <el-table-column prop="score"
-                       label="信用分"
-                       width="150"></el-table-column>
-      
       <el-table-column label="创建时间"
                        width="150">
         <template slot-scope="scope">{{ parseTime(scope.row.time) }}</template>
       </el-table-column>
 
       <!-- 推荐人信息 -->
-      <el-table-column prop="masterId"
+      <!-- <el-table-column prop="masterId"
                        label="推荐人id"
                        width="150"></el-table-column>
       <el-table-column prop="masterName"
@@ -129,16 +95,19 @@
       </el-table-column>
       <el-table-column prop="masterPhone"
                        label="推荐人电话"
-                       width="170"></el-table-column>
-      <!-- <el-table-column fixed="right"
+                       width="170"></el-table-column> -->
+      <el-table-column fixed="right"
                        label="操作"
                        width="120">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="showList(scope.row.openid)"
+          <el-button @click.native.prevent="putPlatform(scope.row.id)"
                      type="text"
-                     size="small">更改当前用户状态</el-button>
+                     size="small">修改</el-button>
+          <el-button @click.native.prevent="deletePlatform(scope.row.id,1)" 
+                     type="text" 
+                     size="small">删除</el-button>
         </template>
-      </el-table-column> -->
+      </el-table-column>
     </el-table>
     <!-- 分页区 -->
 
@@ -191,8 +160,8 @@ export default {
       total: 0, // 数量总条数
       // 搜索内容
       formInline: {
-        status: null,
-        type: 1,
+        status: 1,
+        type: 2,
         rank: null,
         id: null,
         phone: null
@@ -244,11 +213,12 @@ export default {
     parseTime (time) {
       return parseTime(time)
     },
-    toPut (id) {
-      console.log(id)
-      this.$router.push({ path: 'userClass/put/' + id })
-    }
+    putPlatform () {
 
+    },
+    deletePlatform () {
+
+    }
   }
 }
 </script>
