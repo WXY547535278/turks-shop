@@ -16,6 +16,10 @@
         <el-input v-model="formInline.rank"
                   placeholder="等级"></el-input>
       </el-form-item>
+      <el-form-item style="float: right;">
+        <el-button type="success"
+                   @click="showPost">新增平台用户</el-button>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary"
                    @click="onSubmit">查询</el-button>
@@ -54,10 +58,10 @@
                        label="操作"
                        width="120">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="putPlatform(scope.row.id)"
+          <el-button @click.native.prevent="showPut(scope.row.id)"
                      type="text"
                      size="small">修改</el-button>
-          <el-button @click.native.prevent="deletePlatform(scope.row.id,1)" 
+          <el-button @click.native.prevent="deleteThis(scope.row.id,1)" 
                      type="text" 
                      size="small">删除</el-button>
         </template>
@@ -77,22 +81,67 @@
       </el-pagination>
     </div>
 
-    <!--  查看区域  -->
-    <!-- <el-dialog title="用户购买课程列表"
-               :visible.sync="showView"
+    <!--  新增区  -->
+    <el-dialog title="列表"
+               :visible.sync="postView"
                width="80%">
-      <el-table :data="payclass">
-        <el-table-column prop="id"
-                         label="课程id"
-                         width="300"></el-table-column>
-        <el-table-column prop="name"
-                         label="课程名称"
-                         width="300"></el-table-column>
-        <el-table-column prop="price"
-                         label="课程价格"
-                         width="300"></el-table-column>
-      </el-table>
-    </el-dialog> -->
+      <el-form ref="form"
+               :model="postForm"
+               label-width="120px">
+
+        <el-form-item label="排序序号:">
+          <el-input v-model="postForm.sort"
+                    style="width: auto;"
+                    type="nummber" />
+        </el-form-item>
+        <el-form-item label="跳转链接:">
+          <el-input v-model="postForm.param"
+                    style="width: auto;"/>
+        </el-form-item>
+        <hr>
+        <el-form-item>
+          <el-button type="primary"
+                     @click="postThis(postForm)">保存</el-button>
+        </el-form-item>
+
+      </el-form>
+
+    </el-dialog>
+
+    <!--  修改区  -->
+    <el-dialog title="列表"
+               :visible.sync="putView"
+               width="80%">
+      <el-form ref="form"
+               :model="putForm"
+               label-width="120px">
+
+        <el-form-item label="id:">
+          <el-input v-model="putForm.id"
+                    style="width: auto;"
+                    type="text"
+                    :disabled="true" />
+        </el-form-item>
+
+        <el-form-item label="排序序号:">
+          <el-input v-model="putForm.sort"
+                    style="width: auto;"
+                    type="nummber" />
+        </el-form-item>
+        <el-form-item label="跳转地址">
+          <el-input v-model="putForm.param"
+                    style="width: auto;" />
+        </el-form-item>
+
+        <hr>
+        <el-form-item>
+          <el-button type="primary"
+                     @click="putThis(putForm)">保存</el-button>
+        </el-form-item>
+
+      </el-form>
+
+    </el-dialog>
 
   </div>
 </template>
@@ -100,13 +149,19 @@
 <script>
 import { getUserList, getClassById, delUser } from "@/api/user";
 import { parseTime } from "@/utils/index"
+import { getUploadUrl } from '@/utils/index'
+import { getToken } from '@/utils/auth.js'
 
 export default {
-  name: 'userlist',
   data () {
     return {
+      upload_url: getUploadUrl(), // 请求的url
+      upload_head: {
+        Authorization: getToken()
+      }, // 上传请求头
       tableData: [],
       payclass: [],
+      fileList: [],
       currentPage4: 1,
       showView: false,
       pageindex: 0, // 当前页
@@ -120,6 +175,21 @@ export default {
         id: null,
         phone: null
       },
+      // 新增
+      postView: false,
+      postForm: {
+        sort: null,
+        img: null,
+        param: null
+      },
+      // 修改
+      putView: false,
+      putForm: {
+        id: null,
+        img: null,
+        sort: null,
+        param: null
+      }
     }
   },
   mounted () {
@@ -167,11 +237,95 @@ export default {
     parseTime (time) {
       return parseTime(time)
     },
-    putPlatform () {
+    // 删除平台用户
+    deleteThis (id) {
+      deleteFlashView(id).then(res => {
+        if (res.code === '200') {
+          this.$message({
+            type: 'success',
+            message: '操作成功!'
+          })
+          this.getFlashViewList()
+        } else {
+          this.$message({
+            type: 'warning',
+            message: '操作失败'
+          })
+        }
+      })
+    },
+
+  //新增相关
+    showPost () {
+      this.postView = true
+      this.postForm.sort = null
+      this.postForm.img = null
+    },
+    postThis (data) {
+      postFlashView(data).then(res => {
+        this.$message({
+          type: 'success',
+          message: '新增成功!'
+        })
+        this.postView = false;
+        this.getFlashViewList()
+      }).catch(() => {
+        this.$message({
+          type: 'warning',
+          message: '新增失败'
+        })
+      })
 
     },
-    deletePlatform () {
+    //处理banner上传图片
+    upload_success_banner (response, file, fileList) {
+      if (file.response.code === '200') {
+        this.fileList = []
+        this.postForm.img = file.response.data
+      } else {
+        this.$message.error('上传错误!请重试')
+      }
+    },
 
+
+    //修改相关
+    showPut (id) {
+      var thisBean = {};
+      for (var i = 0; i < this.tableData.length; i++) {
+        if (id === this.tableData[i].id) {
+          thisBean = this.tableData[i]
+          break;
+        }
+      }
+      this.putView = true
+      this.putForm.id = thisBean.id
+      this.putForm.img = thisBean.img
+      this.putForm.sort = thisBean.sort
+      this.putForm.param = thisBean.param
+    },
+    putThis (data) {
+
+      putFlashView(data).then(res => {
+        this.$message({
+          type: 'success',
+          message: '修改成功!'
+        })
+        this.putView = false;
+        this.getFlashViewList();
+      }).catch(() => {
+        this.$message({
+          type: 'warning',
+          message: '修改失败'
+        })
+      })
+    },
+    upload_success_put (response, file, fileList) {
+      if (file.response.code === '200') {
+        this.fileList = []
+        this.putForm.img = file.response.data;
+      } else {
+        this.$message.error('上传错误!请重试');
+      }
     }
   }
 }

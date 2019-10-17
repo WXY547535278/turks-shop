@@ -20,7 +20,8 @@
       <el-table-column prop="text.content"
                        :show-overflow-tooltip="true"
                        label="内容"
-                       width="500"></el-table-column>
+                       width="500"
+                       ></el-table-column>
       <el-table-column fixed="right"
                        label="操作"
                        width="120">
@@ -137,7 +138,7 @@ import { getToken } from '@/utils/auth.js'
 export default {
   data () {
     let container = [
-      ['bold', 'italic', 'underline'],
+      ['bold'],
       [{ 'align': [] }],
       // [{ 'size': ['small', false, 'large', 'huge'] }], // 文字大小
       ['image'], // 图片
