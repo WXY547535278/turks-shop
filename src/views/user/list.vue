@@ -75,6 +75,13 @@
                :src="scope.row.img"
                fit="fill" /></template>
       </el-table-column>
+      <el-table-column label="头像"
+                       width="150">
+        <template slot-scope="scope"><img v-image-preview
+               style="width: 35px; height: 35px"
+               :src="scope.row.wechatImg"
+               fit="fill" /></template>
+      </el-table-column>
       <el-table-column prop="rank"
                        label="等级"
                        width="150"></el-table-column>
@@ -87,13 +94,6 @@
       <el-table-column prop="wechatCode"
                        label="微信号码"
                        width="150"></el-table-column>
-      <el-table-column label="微信头像"
-                       width="150">
-        <template slot-scope="scope"><img v-image-preview
-               style="width: 35px; height: 35px"
-               :src="scope.row.wechatImg"
-               fit="fill" /></template>
-      </el-table-column>
       <el-table-column label="店铺二维码"
                        width="150">
         <template slot-scope="scope"><img v-image-preview
@@ -120,7 +120,7 @@
       <el-table-column prop="masterName"
                        label="推荐人姓名"
                        width="150"></el-table-column>
-      <el-table-column label="头像"
+      <el-table-column label="推荐人头像"
                        width="150">
         <template slot-scope="scope"><img v-image-preview
                style="width: 35px; height: 35px"

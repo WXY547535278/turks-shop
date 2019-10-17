@@ -138,7 +138,7 @@ import { getToken } from '@/utils/auth.js'
 export default {
   data () {
     let container = [
-      ['bold'],
+      ['bold', 'italic', 'underline'],
       [{ 'align': [] }],
       // [{ 'size': ['small', false, 'large', 'huge'] }], // 文字大小
       ['image'], // 图片
@@ -256,21 +256,32 @@ export default {
       return parseTime(time)
     },
 
-    // 删除轮播图
+    // 删除公告
     deleteThis (id) {
-      delOther(id).then(res => {
-        if (res.code === '200') {
-          this.$message({
-            type: 'success',
-            message: '操作成功!'
-          })
-          this.getOtherList()
-        } else {
-          this.$message({
-            type: 'warning',
-            message: '操作失败'
-          })
-        }
+      this.$confirm('是否确认删除', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        delOther(id).then(res => {
+          if (res.code === '200') {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+            this.getOtherList()
+          } else {
+            this.$message({
+              type: 'warning',
+              message: '操作失败'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     },
     // 新增相关

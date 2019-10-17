@@ -182,19 +182,30 @@ export default {
     },
     // 删除友情链接
     deleteThis (id) {
-      delOther(id).then(res => {
-        if (res.code === '200') {
-          this.$message({
-            type: 'success',
-            message: '操作成功!'
-          })
-          this.getOtherList()
-        } else {
-          this.$message({
-            type: 'warning',
-            message: '操作失败'
-          })
-        }
+      this.$confirm('是否确认删除', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        delOther(id).then(res => {
+          if (res.code === '200') {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+            this.getOtherList()
+          } else {
+            this.$message({
+              type: 'warning',
+              message: '操作失败'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     },
     //新增相关

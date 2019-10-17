@@ -32,7 +32,7 @@
                        label="id"
                        width="250"></el-table-column>
       <el-table-column prop="name"
-                       label="昵称"
+                       label="名字"
                        width="200"></el-table-column>
       <el-table-column prop="phone"
                        label="电话"
@@ -47,11 +47,31 @@
       <el-table-column prop="rank"
                        label="等级"
                        width="150"></el-table-column>
+      <el-table-column prop="score"
+                       label="信用分"
+                       width="150"></el-table-column>
       <el-table-column prop="wechatCode"
                        label="微信号码"
                        width="150"></el-table-column>
-      <el-table-column label="创建时间"
+      <el-table-column label="店铺二维码"
                        width="150">
+        <template slot-scope="scope"><img v-image-preview
+               style="width: 35px; height: 35px"
+               :src="scope.row.shopQrCode"
+               fit="fill" /></template>
+      </el-table-column>
+      <el-table-column label="邀请二维码"
+                       width="150">
+        <template slot-scope="scope"><img v-image-preview
+               style="width: 35px; height: 35px"
+               :src="scope.row.qrCode"
+               fit="fill" /></template>
+      </el-table-column>
+      <el-table-column prop="password"
+                       label="密码"
+                       width="200"></el-table-column>
+      <el-table-column label="创建时间"
+                       width="200">
         <template slot-scope="scope">{{ parseTime(scope.row.time) }}</template>
       </el-table-column>
       <el-table-column fixed="right"
@@ -61,8 +81,8 @@
           <el-button @click.native.prevent="showPut(scope.row.id)"
                      type="text"
                      size="small">修改</el-button>
-          <el-button @click.native.prevent="deleteThis(scope.row.id,1)" 
-                     type="text" 
+          <el-button @click.native.prevent="deleteThis(scope.row.id,1)"
+                     type="text"
                      size="small">删除</el-button>
         </template>
       </el-table-column>
@@ -88,15 +108,49 @@
       <el-form ref="form"
                :model="postForm"
                label-width="120px">
-
-        <el-form-item label="排序序号:">
-          <el-input v-model="postForm.sort"
+        <el-form-item label="姓名:">
+          <el-input v-model="postForm.name"
                     style="width: auto;"
-                    type="nummber" />
+                    type="text" />
         </el-form-item>
-        <el-form-item label="跳转链接:">
-          <el-input v-model="postForm.param"
-                    style="width: auto;"/>
+        <el-form-item label="头像:">
+          <template>
+            <img style="width: 100px; height: 100px"
+                 :src="postForm.img"
+                 fit="fill" />
+          </template>
+          <el-upload class="upload-demo"
+                     :action="upload_url"
+                     :headers="upload_head"
+                     :multiple=false
+                     :limit=1
+                     :on-success="upload_success_post"
+                     :file-list="fileList">
+            <el-button size="small"
+                       type="primary">点击上传</el-button>
+            <div slot="tip"
+                 class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="手机号:">
+          <el-input v-model="postForm.phone"
+                    style="width: auto;"
+                    type="text" />
+        </el-form-item>
+        <el-form-item label="微信号:">
+          <el-input v-model="postForm.wechatCode"
+                    style="width: auto;"
+                    type="text" />
+        </el-form-item>
+        <el-form-item label="密码:">
+          <el-input v-model="postForm.password"
+                    style="width: auto;"
+                    type="text" />
+        </el-form-item>
+        <el-form-item label="等级:">
+          <el-input v-model="postForm.rank"
+                    style="width: auto;"
+                    type="text" />
         </el-form-item>
         <hr>
         <el-form-item>
@@ -123,14 +177,54 @@
                     :disabled="true" />
         </el-form-item>
 
-        <el-form-item label="排序序号:">
-          <el-input v-model="putForm.sort"
+        <el-form-item label="姓名:">
+          <el-input v-model="putForm.name"
                     style="width: auto;"
-                    type="nummber" />
+                    type="text" />
         </el-form-item>
-        <el-form-item label="跳转地址">
-          <el-input v-model="putForm.param"
-                    style="width: auto;" />
+        <el-form-item label="头像:">
+          <template>
+            <img style="width: 100px; height: 100px"
+                 :src="putForm.img"
+                 fit="fill" />
+          </template>
+          <el-upload class="upload-demo"
+                     :action="upload_url"
+                     :headers="upload_head"
+                     :multiple=false
+                     :limit=1
+                     :on-success="upload_success_put"
+                     :file-list="fileList">
+            <el-button size="small"
+                       type="primary">点击上传</el-button>
+            <div slot="tip"
+                 class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="手机号:">
+          <el-input v-model="putForm.phone"
+                    style="width: auto;"
+                    type="text" />
+        </el-form-item>
+        <el-form-item label="微信号:">
+          <el-input v-model="putForm.wechatCode"
+                    style="width: auto;"
+                    type="text" />
+        </el-form-item>
+        <el-form-item label="密码:">
+          <el-input v-model="putForm.password"
+                    style="width: auto;"
+                    type="text" />
+        </el-form-item>
+        <el-form-item label="等级:">
+          <el-input v-model="putForm.rank"
+                    style="width: auto;"
+                    type="text" />
+        </el-form-item>
+        <el-form-item label="信用分:">
+          <el-input v-model="putForm.score"
+                    style="width: auto;"
+                    type="text" />
         </el-form-item>
 
         <hr>
@@ -147,7 +241,7 @@
 </template>
 
 <script>
-import { getUserList, getClassById, delUser } from "@/api/user";
+import { getUserList, delUser, postUser, putUser } from "@/api/user";
 import { parseTime } from "@/utils/index"
 import { getUploadUrl } from '@/utils/index'
 import { getToken } from '@/utils/auth.js'
@@ -178,17 +272,24 @@ export default {
       // 新增
       postView: false,
       postForm: {
-        sort: null,
+        name: null,
         img: null,
-        param: null
+        phone: null,
+        rank: null,
+        wechatCode: null,
+        password: null,
+        type: 2
       },
       // 修改
       putView: false,
       putForm: {
-        id: null,
+        name: null,
         img: null,
-        sort: null,
-        param: null
+        phone: null,
+        rank: null,
+        wechatCode: null,
+        password: null,
+        score: null
       }
     }
   },
@@ -239,46 +340,60 @@ export default {
     },
     // 删除平台用户
     deleteThis (id) {
-      deleteFlashView(id).then(res => {
-        if (res.code === '200') {
-          this.$message({
-            type: 'success',
-            message: '操作成功!'
-          })
-          this.getFlashViewList()
-        } else {
-          this.$message({
-            type: 'warning',
-            message: '操作失败'
-          })
-        }
+      this.$confirm('是否确认删除', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        delUser(id).then(res => {
+          if (res.code === '200') {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+            this.getUserList()
+          } else {
+            this.$message({
+              type: 'warning',
+              message: '操作失败'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     },
-
-  //新增相关
+    // 新增相关
     showPost () {
       this.postView = true
-      this.postForm.sort = null
+      this.postForm.name = null
       this.postForm.img = null
+      this.postForm.phone = null
+      this.postForm.rank = null
+      this.postForm.wechatCode = null
+      this.postForm.password = null
+      this.postForm.type = 2
     },
     postThis (data) {
-      postFlashView(data).then(res => {
+      postUser(data).then(res => {
         this.$message({
           type: 'success',
           message: '新增成功!'
         })
-        this.postView = false;
-        this.getFlashViewList()
+        this.postView = false
+        this.getUserList()
       }).catch(() => {
         this.$message({
           type: 'warning',
           message: '新增失败'
         })
       })
-
     },
-    //处理banner上传图片
-    upload_success_banner (response, file, fileList) {
+    // 处理banner上传图片
+    upload_success_post (response, file, fileList) {
       if (file.response.code === '200') {
         this.fileList = []
         this.postForm.img = file.response.data
@@ -287,31 +402,32 @@ export default {
       }
     },
 
-
-    //修改相关
+    // 修改相关
     showPut (id) {
-      var thisBean = {};
+      var thisBean = {}
       for (var i = 0; i < this.tableData.length; i++) {
         if (id === this.tableData[i].id) {
           thisBean = this.tableData[i]
-          break;
+          break
         }
       }
       this.putView = true
       this.putForm.id = thisBean.id
       this.putForm.img = thisBean.img
-      this.putForm.sort = thisBean.sort
-      this.putForm.param = thisBean.param
+      this.putForm.name = thisBean.name
+      this.putForm.phone = thisBean.phone
+      this.putForm.rank = thisBean.rank
+      this.putForm.wechatCode = thisBean.wechatCode
+      this.putForm.password = thisBean.password
     },
     putThis (data) {
-
-      putFlashView(data).then(res => {
+      putUser(data).then(res => {
         this.$message({
           type: 'success',
           message: '修改成功!'
         })
-        this.putView = false;
-        this.getFlashViewList();
+        this.putView = false
+        this.getUserList()
       }).catch(() => {
         this.$message({
           type: 'warning',
@@ -322,9 +438,9 @@ export default {
     upload_success_put (response, file, fileList) {
       if (file.response.code === '200') {
         this.fileList = []
-        this.putForm.img = file.response.data;
+        this.putForm.img = file.response.data
       } else {
-        this.$message.error('上传错误!请重试');
+        this.$message.error('上传错误!请重试')
       }
     }
   }
