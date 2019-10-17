@@ -76,7 +76,7 @@
       <el-table-column prop="slaverPhone"
                        label="被投诉人电话"
                        width="150"></el-table-column>
-      <el-table-column label="投诉人头像"
+      <el-table-column label="被投诉人头像"
                        width="150">
         <template slot-scope="scope"><img v-image-preview
                style="width: 35px; height: 35px"
@@ -215,7 +215,7 @@ export default {
     onSubmit () {
       this.getComplaintList()
     },
-    // 获取用户列表
+    // 获取投诉列表
     getComplaintList () {
       let query = {
         pageIndex: this.pageindex,
@@ -226,25 +226,46 @@ export default {
       }
       getComplaintList(query).then(res => {
         console.log('获取到的投诉列表', res)
-        this.tableData = res.data
+        this.tableData = res.data.map(item => {
+          if (item.status == 1) {
+            item.status = '审核中'
+          } else if (item.status == 2) {
+            item.status = '通过'
+          } else {
+            item.status = '拒绝'
+          }
+          return item
+        })
+        // this.tableData = res.data
         this.total = res.pageTotal
       })
     },
     // 删除投诉
     deleteThis (id) {
-      deleteComplaint(id).then(res => {
-        if (res.code === '200') {
-          this.$message({
-            type: 'success',
-            message: '操作成功!'
-          })
-          this.getComplaintList()
-        } else {
-          this.$message({
-            type: 'warning',
-            message: '操作失败'
-          })
-        }
+      this.$confirm('是否确认删除', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteComplaint(id).then(res => {
+          if (res.code === '200') {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+            this.getComplaintList()
+          } else {
+            this.$message({
+              type: 'warning',
+              message: '操作失败'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     },
     // 格式化时间

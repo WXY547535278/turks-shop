@@ -178,7 +178,7 @@ export default {
     onSubmit () {
       this.getProductList()
     },
-    // 获取订单列表
+    // 获取产品列表
     getProductList () {
       let query = {
         pageIndex: this.pageindex,
@@ -188,8 +188,16 @@ export default {
         userId: this.formInline.userId
       }
       getProductList(query).then(res => {
-        console.log('获取订单列表', res)
-        this.tableData = res.data
+        console.log('获取产品列表', res)
+        this.tableData = res.data.map(item => {
+          if (item.status == 1) {
+            item.status = '上架'
+          } else {
+            item.status = '下架'
+          }
+          return item
+        })
+        // this.tableData = res.data
         this.total = res.pageTotal
       })
     },

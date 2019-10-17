@@ -111,10 +111,6 @@
                        width="150">
         <template slot-scope="scope">{{ parseTime(scope.row.time) }}</template>
       </el-table-column>
-      <el-table-column prop="status"
-                       label="状态"
-                       width="150"></el-table-column>
-
       <!-- <el-table-column fixed="right"
                        label="操作"
                        width="120">
@@ -254,7 +250,24 @@ export default {
       }
       getApplyList(query).then(res => {
         console.log('获取到的投诉列表', res)
-        this.tableData = res.data
+        this.tableData = res.data.map(item => {
+          if (item.status == 1) {
+            item.status = '审核中'
+          } else if (item.status == 2) {
+            item.status = '通过'
+          } else if (item.status == 3) {
+            item.status = '拒绝'
+          } else {
+            item.status = '已经过期'
+          }
+          if (item.type == 1) {
+            item.type = '普通人审核'
+          } else {
+            item.type = '平台人员在审核'
+          }
+          return item
+        })
+        // this.tableData = res.data
         this.total = res.pageTotal
       })
     },

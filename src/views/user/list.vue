@@ -88,9 +88,6 @@
       <el-table-column prop="status"
                        label="用户状态"
                        width="150"></el-table-column>
-      <el-table-column prop="type"
-                       label="用户类型"
-                       width="150"></el-table-column>
       <el-table-column prop="wechatCode"
                        label="微信号码"
                        width="150"></el-table-column>
@@ -236,7 +233,17 @@ export default {
       }
       getUserList(query).then(res => {
         console.log('获取到的用户列表', res)
-        this.tableData = res.data
+        this.tableData = res.data.map(item => {
+          if (item.status == 1) {
+            item.status = '正常使用过'
+          } else if (item.status == 2) {
+            item.status = '暂时停用'
+          } else {
+            item.status = '永久停用'
+          }
+          return item
+        })
+        // this.tableData = res.data
         this.total = res.pageTotal
       })
     },

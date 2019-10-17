@@ -12,9 +12,17 @@
         <el-input v-model="formInline.leekId"
                   placeholder="下级id"></el-input>
       </el-form-item>
-      <el-form-item label="下级状态">
-        <el-input v-model="formInline.leekStatus"
-                  placeholder="下级状态"></el-input>
+      <el-form-item label="下级状态  ">
+        <el-select v-model="formInline.leekStatus"
+                   placeholder="下级状态 "
+                   @change="onSubmit">
+          <el-option label="正常使用过  "
+                     value="1"></el-option>
+          <el-option label="暂时停用"
+                     value="2"></el-option>
+          <el-option label="永久停用"
+                     value="3"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="下级等级">
         <el-input v-model="formInline.leekRank"
@@ -78,21 +86,11 @@
                        label="下级微信号码"
                        width="150"></el-table-column>
       <el-table-column prop="type"
-                       label="下级状态"
+                       label="下级类型"
                        width="150"></el-table-column>
       <el-table-column prop="masterRank"
                        label="上级的等级"
                        width="150"></el-table-column>
-
-      <el-table-column fixed="right"
-                       label="操作"
-                       width="120">
-        <template slot-scope="scope">
-          <!-- <el-button @click.native.prevent="showList(scope.row.openid)"
-                     type="text"
-                     size="small">更改当前用户状态</el-button> -->
-        </template>
-      </el-table-column>
     </el-table>
     <!-- 分页区 -->
 
@@ -191,7 +189,22 @@ export default {
       }
       getUserTeam(query).then(res => {
         console.log('获取到的团队列表', res)
-        this.tableData = res.data
+        this.tableData = res.data.map(item => {
+          if (item.leekStatus == 1) {
+            item.leekStatus = '正常使用过'
+          } else if (item.leekStatus == 2) {
+            item.leekStatus = '暂时停用'
+          } else {
+            item.leekStatus = '永久停用'
+          }
+          if (item.type == 1) {
+            item.type = '直推'
+          } else {
+            item.type = '下级发展的'
+          }
+          return item
+        })
+        // this.tableData = res.data
         this.total = res.pageTotal
       })
     },

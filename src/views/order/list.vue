@@ -129,7 +129,7 @@
     </div>
 
     <!-- 查看订单详情  -->
-    <el-dialog title="操作"
+    <el-dialog title="查看详情"
                :visible.sync="showView"
                width="80%">
       <el-table :data="orderDetail">
@@ -242,7 +242,26 @@ export default {
       }
       getOrderList(query).then(res => {
         console.log('获取订单列表', res)
-        this.tableData = res.data
+        this.tableData = res.data.map(item => {
+          if (item.status == 1) {
+            item.status = '还未审核 '
+          } else if (item.status == 2) {
+            item.status = '已经审核/待发货'
+          } else if (item.status == 3) {
+            item.status = '已发货/未收货'
+          } else if (item.status == 4){
+            item.status = '已收货/未评论'
+          } else {
+            item.status = '已评论 '
+          }
+          if (item.deliveryType == 1) {
+            item.deliveryType = '自提'
+          } else {
+            item.deliveryType = '邮寄'
+          }
+          return item
+        })
+        // this.tableData = res.data
         this.total = res.pageTotal
       })
     },

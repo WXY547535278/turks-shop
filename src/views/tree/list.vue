@@ -25,8 +25,16 @@
                   placeholder="下级电话"></el-input>
       </el-form-item>
       <el-form-item label="下级状态">
-        <el-input v-model="formInline.leekStatus"
-                  placeholder="下级状态"></el-input>
+        <el-select v-model="formInline.leekStatus"
+                   placeholder="下级状态 "
+                   @change="onSubmit">
+          <el-option label="正常使用过"
+                     value="1"></el-option>
+          <el-option label="暂时停用"
+                     value="2"></el-option>
+          <el-option label="永久停用"
+                     value="3"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary"
@@ -152,7 +160,17 @@ export default {
       }
       getTreeList(query).then(res => {
         console.log('获取到的组织架构列表', res)
-        this.tableData = res.data
+        this.tableData = res.data.map(item => {
+          if (item.leekStatus == 1) {
+            item.leekStatus = '正常使用过'
+          } else if (item.leekStatus == 2) {
+            item.leekStatus = '暂时停用'
+          } else {
+            item.leekStatus = '永久停用'
+          }
+          return item
+        })
+        // this.tableData = res.data
         this.total = res.pageTotal
       })
     },

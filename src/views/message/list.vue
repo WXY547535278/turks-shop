@@ -70,6 +70,9 @@
           <el-button @click.native.prevent="showList(scope.row.id)"
                      type="text"
                      size="small">查看详情</el-button>
+          <el-button @click.native.prevent="deleteThis(scope.row.id,1)"
+                     type="text"
+                     size="small">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -187,8 +190,44 @@ export default {
       }
       getMessageList(query).then(res => {
         console.log('获取到的短信列表', res)
-        this.tableData = res.data
+        this.tableData = res.data.map(item => {
+          if (item.status == 0) {
+            item.status = '失败'
+          } else {
+            item.status = '成功'
+          }
+          return item
+        })
+        // this.tableData = res.data
         this.total = res.pageTotal
+      })
+    },
+    // 删除短信
+    deleteThis (id) {
+      this.$confirm('是否确认删除', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        delMessage(id).then(res => {
+          if (res.code === '200') {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+            this.getMessageList()
+          } else {
+            this.$message({
+              type: 'warning',
+              message: '操作失败'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     },
     // 格式化时间

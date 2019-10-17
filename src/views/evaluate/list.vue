@@ -137,7 +137,17 @@ export default {
       }
       getEvaluateList(query).then(res => {
         console.log('获取到的评价列表', res.data)
-        this.tableData = res.data
+        this.tableData = res.data.map(item => {
+          if (item.type == 1) {
+            item.type = '好评'
+          } else if (item.type == 2) {
+            item.type = '中评'
+          } else {
+            item.type = '差评'
+          }
+          return item
+        })
+        // this.tableData = res.data
         this.total = res.pageTotal
       })
     },
