@@ -11,16 +11,17 @@
     </el-form>
 
     <el-table :data="tableData">
-      <el-table-column prop="id"
+      <!-- <el-table-column prop="id"
                        label="id"
-                       width="250"></el-table-column>
+                       width="250"></el-table-column> -->
 
       <el-table-column prop="name"
                        label="类型名"
-                       width="100"></el-table-column>
+                       ></el-table-column>
 
       <el-table-column prop="sort"
-                       label="排序序号"></el-table-column>
+                       label="排序序号"
+                       ></el-table-column>
 
       <el-table-column fixed="right"
                        label="操作">
@@ -153,12 +154,12 @@
                :model="putForm"
                label-width="120px">
 
-        <el-form-item label="id:">
+        <!-- <el-form-item label="id:">
           <el-input v-model="putForm.id"
                     style="width: auto;"
                     type="text"
                     :disabled="true" />
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item label="排序序号:">
           <el-input v-model="putForm.sort"

@@ -11,9 +11,9 @@
     </el-form>
 
     <el-table :data="tableData">
-      <el-table-column prop="id"
+      <!-- <el-table-column prop="id"
                        label="id"
-                       width="250"></el-table-column>
+                       width="250"></el-table-column> -->
       <el-table-column prop="text.title"
                        label="标题"
                        width="200"></el-table-column>
@@ -90,12 +90,12 @@
       <el-form ref="form"
                :model="putForm"
                label-width="120px">
-        <el-form-item label="id:">
+        <!-- <el-form-item label="id:">
           <el-input v-model="putForm.id"
                     style="width: auto;"
                     type="text"
                     :disabled="true" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="标题:">
           <el-input v-model="text.title"
                     style="width: auto;"

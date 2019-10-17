@@ -4,18 +4,18 @@
     <el-form :inline="true"
              :model="formInline"
              class="demo-form-inline">
-      <el-form-item label="id">
+      <!-- <el-form-item label="id">
         <el-input v-model="formInline.id"
                   placeholder="id"></el-input>
-      </el-form-item>
-      <el-form-item label="订单id">
+      </el-form-item> -->
+      <!-- <el-form-item label="订单id">
         <el-input v-model="formInline.orderId"
                   placeholder="订单id "></el-input>
-      </el-form-item>
-      <el-form-item label="用户id">
+      </el-form-item> -->
+      <!-- <el-form-item label="用户id">
         <el-input v-model="formInline.userId"
                   placeholder="用户id"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="评价类型">
         <el-select v-model="formInline.type"
                    placeholder="评价类型 "

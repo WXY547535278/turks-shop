@@ -18,27 +18,15 @@
                    @click="showPost">新增图库</el-button>
       </el-form-item>
     </el-form>
-
     <el-table :data="tableData">
-      <el-table-column prop="id"
+      <!-- <el-table-column prop="id"
                        label="id"
-                       width="250"></el-table-column>
-      <el-table-column prop="typeId"
+                       width="250"></el-table-column> -->
+      <!-- <el-table-column prop="typeId"
                        label="类型id"
-                       width="250"></el-table-column>
-      <el-table-column label="图片"
-                       width="250">
-        <template slot-scope="scope"><img style="width: 100px; height: 100px"
-               :src="scope.row.img"
-               fit="fill" />
-        </template>
-      </el-table-column>
+                       width="250"></el-table-column> -->
       <el-table-column prop="sort"
                        label="排序序号"></el-table-column>
-
-      <el-table-column prop="param"
-                       label="跳转url"
-                       width="200"></el-table-column>
       <el-table-column prop="text.name"
                        label="昵称"
                        width="100"></el-table-column>
@@ -54,6 +42,16 @@
       <el-table-column prop="text.bz"
                        label="备注"
                        width="200"></el-table-column>
+      <el-table-column prop="param"
+                       label="跳转url"
+                       width="200"></el-table-column>
+      <el-table-column label="图片"
+                       width="250">
+        <template slot-scope="scope"><img style="width: 100px; height: 100px"
+               :src="scope.row.img"
+               fit="fill" />
+        </template>
+      </el-table-column>
       <el-table-column fixed="right"
                        label="操作"
                        width="120">

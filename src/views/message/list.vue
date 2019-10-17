@@ -4,18 +4,18 @@
     <el-form :inline="true"
              :model="formInline"
              class="demo-form-inline">
-      <el-form-item label="id">
+      <!-- <el-form-item label="id">
         <el-input v-model="formInline.id"
                   placeholder="id"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="电话 ">
         <el-input v-model="formInline.userPhone"
                   placeholder="电话 "></el-input>
       </el-form-item>
-      <el-form-item label="用户id">
+      <!-- <el-form-item label="用户id">
         <el-input v-model="formInline.userId"
                   placeholder="用户id"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="发送状态  ">
         <el-select v-model="formInline.status"
                    placeholder="发送状态 "
@@ -34,12 +34,12 @@
 
     <el-table :data="tableData">
       <!-- 短信信息 -->
-      <el-table-column prop="id"
+      <!-- <el-table-column prop="id"
                        label="id"
                        width="250"></el-table-column>
       <el-table-column prop="userId"
                        label="用户id"
-                       width="200"></el-table-column>
+                       width="200"></el-table-column> -->
       <el-table-column prop="userName"
                        label="用户名"
                        width="200"></el-table-column>

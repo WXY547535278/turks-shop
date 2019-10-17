@@ -4,10 +4,10 @@
     <el-form :inline="true"
              :model="formInline"
              class="demo-form-inline">
-      <el-form-item label="id">
+      <!-- <el-form-item label="id">
         <el-input v-model="formInline.id"
                   placeholder="id"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="电话号码">
         <el-input v-model="formInline.phone"
                   placeholder="电话号码"></el-input>
@@ -28,16 +28,6 @@
                      value="3"></el-option>
         </el-select>
       </el-form-item>
-      <!-- <el-form-item label="用户类型 ">
-        <el-select v-model="formInline.type"
-                   placeholder="用户类型 "
-                   @change="onSubmit">
-          <el-option label="普通用户 "
-                     value="1"></el-option>
-          <el-option label="平台用户"
-                     value="2"></el-option>
-        </el-select>
-      </el-form-item> -->
       <el-form-item>
         <el-button type="primary"
                    @click="onSubmit">查询</el-button>
@@ -46,9 +36,9 @@
 
     <el-table :data="tableData">
       <!-- 用户信息 -->
-      <el-table-column prop="id"
+      <!-- <el-table-column prop="id"
                        label="id"
-                       width="250"></el-table-column>
+                       width="250"></el-table-column> -->
       <el-table-column prop="name"
                        label="昵称"
                        width="200"></el-table-column>
@@ -111,9 +101,9 @@
       </el-table-column>
 
       <!-- 推荐人信息 -->
-      <el-table-column prop="masterId"
+      <!-- <el-table-column prop="masterId"
                        label="推荐人id"
-                       width="150"></el-table-column>
+                       width="150"></el-table-column> -->
       <el-table-column prop="masterName"
                        label="推荐人姓名"
                        width="150"></el-table-column>

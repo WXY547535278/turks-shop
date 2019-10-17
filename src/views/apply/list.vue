@@ -5,19 +5,19 @@
              :model="formInline"
              class="demo-form-inline">
 
-      <el-form-item label="需要升级人id">
+      <!-- <el-form-item label="需要升级人id">
         <el-input v-model="formInline.leekId"
                   placeholder="需要升级人id"></el-input>
-      </el-form-item>
+      </el-form-item> -->
 
-      <el-form-item label="审核人id">
+      <!-- <el-form-item label="审核人id">
         <el-input v-model="formInline.masterId"
                   placeholder="审核人id"></el-input>
-      </el-form-item>
-      <el-form-item label="对应订单id">
+      </el-form-item> -->
+      <!-- <el-form-item label="对应订单id">
         <el-input v-model="formInline.orderId"
                   placeholder="对应订单id"></el-input>
-      </el-form-item>
+      </el-form-item> -->
 
       <el-form-item label="审核状态 ">
         <el-select v-model="formInline.status"
@@ -52,39 +52,39 @@
 
     <el-table :data="tableData">
       <!-- 其他-->
-      <el-table-column prop="id"
+      <!-- <el-table-column prop="id"
                        label="id"
-                       width="250"></el-table-column>
-      <el-table-column prop="rank"
-                       label="申请人当前等级"
-                       width="250"></el-table-column>
-      <el-table-column prop="aldebaran"
-                       label="升级后的等级"
-                       width="200"></el-table-column>
-      <el-table-column prop="orderId"
-                       label="对应的订单id"
-                       width="200"></el-table-column>
-      <!-- 需要升级人 -->
-      <el-table-column prop="leekId"
-                       label="需要升级人id"
-                       width="150"></el-table-column>
+                       width="250"></el-table-column> -->
       <el-table-column prop="leekName"
-                       label="需要升级人姓名"
+                       label="申请升级人姓名"
                        width="150"></el-table-column>
       <el-table-column prop="leekPhone"
-                       label="需要升级人电话"
+                       label="申请升级人电话"
                        width="150"></el-table-column>
-      <el-table-column label="需要升级人头像"
+      <el-table-column label="申请升级人头像"
                        width="150">
         <template slot-scope="scope"><img v-image-preview
                style="width: 35px; height: 35px"
                :src="scope.row.leekImg"
                fit="fill" /></template>
       </el-table-column>
+      <el-table-column prop="rank"
+                       label="申请人当前等级"
+                       width="250"></el-table-column>
+      <el-table-column prop="aldebaran"
+                       label="升级后的等级"
+                       width="200"></el-table-column>
+      <!-- <el-table-column prop="orderId"
+                       label="对应的订单id"
+                       width="200"></el-table-column> -->
+      <!-- 需要升级人 -->
+      <!-- <el-table-column prop="leekId"
+                       label="需要升级人id"
+                       width="150"></el-table-column> -->
       <!-- 审核人 -->
-      <el-table-column prop="masterId"
+      <!-- <el-table-column prop="masterId"
                        label="审核人id"
-                       width="150"></el-table-column>
+                       width="150"></el-table-column> -->
       <el-table-column prop="masterName"
                        label="审核人姓名"
                        width="150"></el-table-column>

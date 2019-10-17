@@ -10,23 +10,22 @@
     </el-form>
 
     <el-table :data="tableData">
-      <el-table-column prop="id"
+      <!-- <el-table-column prop="id"
                        label="id"
+                       width="250"></el-table-column> -->
+      <el-table-column prop="sort"
+                       label="排序序号"
                        width="250"></el-table-column>
       <el-table-column label="图片"
-                       width="250">
+                       width="300">
         <template slot-scope="scope"><img style="width: 100px; height: 100px"
                :src="scope.row.img"
                fit="fill" />
         </template>
       </el-table-column>
-      <el-table-column prop="sort"
-                       label="排序序号"
-                       width="500"></el-table-column>
-
       <el-table-column prop="param"
                        label="跳转url"
-                       width="100"></el-table-column>
+                       width="300"></el-table-column>
 
       <el-table-column fixed="right"
                        label="操作"
@@ -70,6 +69,7 @@
         </el-form-item>
         <el-form-item label="跳转链接:">
           <el-input v-model="postForm.param"
+                    type="textarea"
                     style="width: auto;"/>
         </el-form-item>
         <el-form-item label="轮播图图像:">
@@ -112,12 +112,12 @@
                :model="putForm"
                label-width="120px">
 
-        <el-form-item label="id:">
+        <!-- <el-form-item label="id:">
           <el-input v-model="putForm.id"
                     style="width: auto;"
                     type="text"
                     :disabled="true" />
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item label="排序序号:">
           <el-input v-model="putForm.sort"
@@ -126,6 +126,7 @@
         </el-form-item>
         <el-form-item label="跳转地址">
           <el-input v-model="putForm.param"
+                    type="textarea"
                     style="width: auto;" />
         </el-form-item>
 

@@ -5,7 +5,7 @@
              :model="formInline"
              class="demo-form-inline">
 
-      <el-form-item label="id">
+      <!-- <el-form-item label="id">
         <el-input v-model="formInline.id"
                   placeholder="id"></el-input>
       </el-form-item>
@@ -13,7 +13,7 @@
       <el-form-item label="用户id">
         <el-input v-model="formInline.userId"
                   placeholder="用户id"></el-input>
-      </el-form-item>
+      </el-form-item> -->
 
       <el-form-item label="产品状态">
         <el-select v-model="formInline.status"
@@ -34,12 +34,12 @@
 
     <el-table :data="tableData">
       <!-- 产品信息 -->
-      <el-table-column prop="id"
+      <!-- <el-table-column prop="id"
                        label="id"
                        width="150"></el-table-column>
       <el-table-column prop="userId"
                        label="用户id"
-                       width="150"></el-table-column>
+                       width="150"></el-table-column> -->
       <el-table-column prop="name"
                        label="产品名"
                        width="150"></el-table-column>
@@ -94,12 +94,12 @@
                :visible.sync="showView"
                width="80%">
       <el-table :data="productDetail">
-        <el-table-column prop="id"
+        <!-- <el-table-column prop="id"
                          label="规格id"
                          width="300"></el-table-column>
         <el-table-column prop="productId"
                          label="产品id"
-                         width="300"></el-table-column>
+                         width="300"></el-table-column> -->
         <el-table-column prop="name"
                          label="名称"
                          width="300"></el-table-column>

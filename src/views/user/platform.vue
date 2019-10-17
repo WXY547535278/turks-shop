@@ -4,10 +4,10 @@
     <el-form :inline="true"
              :model="formInline"
              class="demo-form-inline">
-      <el-form-item label="id">
+      <!-- <el-form-item label="id">
         <el-input v-model="formInline.id"
                   placeholder="id"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="电话号码">
         <el-input v-model="formInline.phone"
                   placeholder="电话号码"></el-input>
@@ -28,9 +28,9 @@
 
     <el-table :data="tableData">
       <!-- 用户信息 -->
-      <el-table-column prop="id"
+      <!-- <el-table-column prop="id"
                        label="id"
-                       width="250"></el-table-column>
+                       width="250"></el-table-column> -->
       <el-table-column prop="name"
                        label="名字"
                        width="200"></el-table-column>
@@ -170,12 +170,12 @@
                :model="putForm"
                label-width="120px">
 
-        <el-form-item label="id:">
+        <!-- <el-form-item label="id:">
           <el-input v-model="putForm.id"
                     style="width: auto;"
                     type="text"
                     :disabled="true" />
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item label="姓名:">
           <el-input v-model="putForm.name"
@@ -283,6 +283,7 @@ export default {
       // 修改
       putView: false,
       putForm: {
+        id: null,
         name: null,
         img: null,
         phone: null,
@@ -419,6 +420,7 @@ export default {
       this.putForm.rank = thisBean.rank
       this.putForm.wechatCode = thisBean.wechatCode
       this.putForm.password = thisBean.password
+      this.putForm.score = thisBean.score
     },
     putThis (data) {
       putUser(data).then(res => {

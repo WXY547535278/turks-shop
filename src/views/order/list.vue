@@ -5,15 +5,15 @@
              :model="formInline"
              class="demo-form-inline">
 
-      <el-form-item label="下单人id">
+      <!-- <el-form-item label="下单人id">
         <el-input v-model="formInline.leekId"
                   placeholder="下单人id"></el-input>
-      </el-form-item>
+      </el-form-item> -->
 
-      <el-form-item label="店铺id">
+      <!-- <el-form-item label="店铺id">
         <el-input v-model="formInline.shopId"
                   placeholder="店铺id"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="下单人当前等级">
         <el-input v-model="formInline.rank"
                   placeholder="下单人当前等级"></el-input>
@@ -54,16 +54,16 @@
 
     <el-table :data="tableData">
       <!-- 其他-->
-      <el-table-column prop="id"
+      <!-- <el-table-column prop="id"
                        label="订单id"
                        width="250"></el-table-column>
       <el-table-column prop="shopId"
                        label="店铺id"
-                       width="250"></el-table-column>
+                       width="250"></el-table-column> -->
       <!-- 下单人 -->
-      <el-table-column prop="leekId"
+      <!-- <el-table-column prop="leekId"
                        label="下单人id"
-                       width="150"></el-table-column>
+                       width="150"></el-table-column> -->
       <el-table-column prop="leekName"
                        label="下单人姓名"
                        width="150"></el-table-column>
@@ -146,7 +146,7 @@
                          width="150">
           <template slot-scope="scope"><img v-image-preview
                  style="width: 35px; height: 35px"
-                 :src="scope.row.banner"
+                 :src="JSON.parse(scope.row.banner)"
                  fit="fill" /></template>
         </el-table-column>
         <el-table-column prop="skuId"

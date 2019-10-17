@@ -5,19 +5,19 @@
              :model="formInline"
              class="demo-form-inline">
 
-      <el-form-item label="投诉人id">
+      <!-- <el-form-item label="投诉人id">
         <el-input v-model="formInline.masterId"
                   placeholder="投诉人id"></el-input>
-      </el-form-item>
+      </el-form-item> -->
 
-      <el-form-item label="被投诉人id">
+      <!-- <el-form-item label="被投诉人id">
         <el-input v-model="formInline.slaverId"
                   placeholder="被投诉人id"></el-input>
-      </el-form-item>
+      </el-form-item> -->
 
-      <el-form-item label="用户状态 ">
+      <el-form-item label="投诉状态 ">
         <el-select v-model="formInline.status"
-                   placeholder="用户状态"
+                   placeholder="投诉状态"
                    @change="onSubmit">
           <el-option label="审核中  "
                      value="1"></el-option>
@@ -36,23 +36,9 @@
 
     <el-table :data="tableData">
       <!-- 投诉内容-->
-      <el-table-column prop="id"
+      <!-- <el-table-column prop="id"
                        label="id"
-                       width="250"></el-table-column>
-      <el-table-column label="投诉图片"
-                       width="150">
-        <template slot-scope="scope"><img v-image-preview
-               style="width: 35px; height: 35px"
-               :src="scope.row.imgs"
-               fit="fill" /></template>
-      </el-table-column>
-      <el-table-column prop="text"
-                       label="投诉内容"
-                       width="200"></el-table-column>
-      <!-- 投诉人 -->
-      <el-table-column prop="masterId"
-                       label="投诉人id"
-                       width="150"></el-table-column>
+                       width="250"></el-table-column> -->
       <el-table-column prop="masterName"
                        label="投诉人姓名"
                        width="150"></el-table-column>
@@ -66,10 +52,24 @@
                :src="scope.row.masterImg"
                fit="fill" /></template>
       </el-table-column>
+      <el-table-column label="投诉图片"
+                       width="150">
+        <template slot-scope="scope"><img v-image-preview
+               style="width: 35px; height: 35px"
+               :src="scope.row.imgs"
+               fit="fill" /></template>
+      </el-table-column>
+      <el-table-column prop="text"
+                       label="投诉内容"
+                       width="200"></el-table-column>
+      <!-- 投诉人 -->
+      <!-- <el-table-column prop="masterId"
+                       label="投诉人id"
+                       width="150"></el-table-column> -->
       <!-- 被投诉人 -->
-      <el-table-column prop="slaverId"
+      <!-- <el-table-column prop="slaverId"
                        label="被投诉人id"
-                       width="150"></el-table-column>
+                       width="150"></el-table-column> -->
       <el-table-column prop="slaverName"
                        label="被投诉人姓名"
                        width="150"></el-table-column>
