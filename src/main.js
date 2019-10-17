@@ -17,20 +17,14 @@ import '@/permission' // permission control
 import VueDirectiveImagePreviewer from 'vue-directive-image-previewer'
 import 'vue-directive-image-previewer/dist/assets/style.css'
 Vue.use(VueDirectiveImagePreviewer)
-    /**
-     * If you don't want to use mock-server
-     * you want to use MockJs for mock api
-     * you can execute: mockXHR()
-     *
-     * Currently MockJs will be used in the production environment,
-     * please remove it before going online! ! !
-     */
-    // import { mockXHR } from '../mock'
-    // if (process.env.NODE_ENV === 'production') {
-    //     mockXHR()
-    // }
+    // 富文本框
+import VueQuillEditor from 'vue-quill-editor'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
 
-// set ElementUI lang to EN
+Vue.use(VueQuillEditor)
+    // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
 
 Vue.config.productionTip = false

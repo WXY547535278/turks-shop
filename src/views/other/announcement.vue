@@ -14,9 +14,12 @@
       <el-table-column prop="id"
                        label="id"
                        width="250"></el-table-column>
-      <el-table-column prop="text"
+      <el-table-column prop="text.title"
+                       label="标题"
+                       width="200"></el-table-column>
+      <el-table-column prop="text.content"
                        :show-overflow-tooltip="true"
-                       label="公告"
+                       label="内容"
                        width="500"></el-table-column>
       <el-table-column fixed="right"
                        label="操作"
@@ -45,53 +48,31 @@
       </el-pagination>
     </div>
     <!--  新增区  -->
-    <el-dialog title="列表"
+    <el-dialog title="公告"
                :visible.sync="postView"
                width="80%">
       <el-form ref="form"
                :model="postForm"
                label-width="120px">
-        <el-form-item label="类型id:">
-          <el-input v-model="postForm.typeId"
+        <el-form-item label="标题:">
+          <el-input v-model="text.title"
                     style="width: auto;"
-                    type="nummber" />
+                    type="text"
+                    />
         </el-form-item>
-        <el-form-item label="排序序号:">
-          <el-input v-model="postForm.sort"
-                    style="width: auto;"
-                    type="nummber" />
-        </el-form-item>
-        <el-form-item label="跳转链接:">
-          <el-input v-model="postForm.param"
-                    style="width: auto;" />
-        </el-form-item>
-        <el-form-item label="描述:">
-          <el-input v-model="postForm.text"
-                    type="textarea"
-                    style="width: auto;" />
-        </el-form-item>
-        <el-form-item label="图片:">
-          <template>
-            <img style="width: 100px; height: 100px"
-                 :src="postForm.img"
-                 fit="fill" />
-          </template>
-
-          <el-upload class="upload-demo"
+        <el-form-item label="内容:">
+          <quill-editor v-model="text.content"
+                        ref="myQuillEditor"
+                        :options="editorOption"
+                        >
+          </quill-editor>
+          <el-upload class="avatar-uploader"
+                     ref="upload"
                      :action="upload_url"
-                     :headers="upload_head"
-                     :multiple=false
-                     :limit=1
-                     :on-success="upload_success_banner"
-                     :file-list="fileList">
-            <el-button size="small"
-                       type="primary">点击上传</el-button>
-            <div slot="tip"
-                 class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                     :on-success="uploadSuccess"
+                     :headers="upload_head">
           </el-upload>
-
         </el-form-item>
-
         <hr>
         <el-form-item>
           <el-button type="primary"
@@ -114,58 +95,22 @@
                     type="text"
                     :disabled="true" />
         </el-form-item>
-        <el-form-item label="类型id:">
-          <el-input v-model="putForm.typeId"
+        <el-form-item label="标题:">
+          <el-input v-model="text.title"
                     style="width: auto;"
-                    type="text" />
+                    type="text"/>
         </el-form-item>
-        <el-form-item label="排序序号:">
-          <el-input v-model="putForm.sort"
-                    style="width: auto;"
-                    type="nummber" />
-        </el-form-item>
-        <el-form-item label="跳转地址">
-          <el-input v-model="putForm.param"
-                    style="width: auto;" />
-        </el-form-item>
-        <!-- <el-form-item label="描述">
-          <el-input v-model="putForm.text"
-                    type="textarea"
-                    style="width: auto;" />
-        </el-form-item> -->
-        <el-form-item label="昵称">
-          <el-input v-model="text.name"
-                    style="width: auto;" />
-        </el-form-item>
-        <el-form-item label="电话">
-          <el-input v-model="text.phone"
-                    style="width: auto;" />
-        </el-form-item>
-        <el-form-item label="微信">
-          <el-input v-model="text.wx"
-                    style="width: auto;" />
-        </el-form-item>
-        <el-form-item label="备注">
-          <el-input v-model="text.bz"
-                    style="width: auto;" />
-        </el-form-item>
-        <el-form-item label="图片:">
-          <template>
-            <img style="width: 100px; height: 100px"
-                 :src="putForm.img"
-                 fit="fill" />
-          </template>
-          <el-upload class="upload-demo"
+        <el-form-item label="内容:">
+          <quill-editor v-model="text.content"
+                        ref="myQuillEditor"
+                        :options="editorOption"
+                        >
+          </quill-editor>
+          <el-upload class="avatar-uploader"
+                     ref="upload"
                      :action="upload_url"
-                     :headers="upload_head"
-                     :multiple=false
-                     :limit=1
-                     :on-success="upload_success_put"
-                     :file-list="fileList">
-            <el-button size="small"
-                       type="primary">点击上传</el-button>
-            <div slot="tip"
-                 class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                     :on-success="uploadSuccess"
+                     :headers="upload_head">
           </el-upload>
         </el-form-item>
 
@@ -190,8 +135,16 @@ import { getToken } from '@/utils/auth.js'
 
 
 export default {
-  name: 'complaintlist',
   data () {
+    let container = [
+      ['bold', 'italic', 'underline'],
+      [{ 'align': [] }],
+      // [{ 'size': ['small', false, 'large', 'huge'] }], // 文字大小
+      ['image'], // 图片
+      [{ 'color': [] }, { 'background': [] }], // 字体颜色
+      // [{ 'indent': '-1'}, { 'indent': '+1' }]
+      [{ 'header': 1 }, { 'header': 2 }] 
+    ]
     return {
       // upload_url: getRequestUrl() + "upload/picUpload", 
       upload_url: getUploadUrl(), // 请求的url
@@ -208,25 +161,35 @@ export default {
       fileList: [],
       putView: false,
       postForm: {
-        img: null,
         text: null,
-        sort: null,
-        param: null,
-        typeId: null
+        type: 1
       },
       putForm: {
         id: null,
-        img: null,
         text: null,
-        sort: null,
-        param: null,
-        typeId: null
+        type: 1
       },
       text: {
-        wx: null,
-        phone: null,
-        name: null,
-        bz: null
+        title: null,
+        content: null
+      },
+      // 富文本框
+      content: '',
+      editorOption: {
+        modules: {
+          toolbar: {
+            container: container,
+            handlers: {
+              'image': function(value) {
+                if (value) {
+                  document.querySelector('.avatar-uploader input').click()
+                } else {
+                  this.quill.format('image', false)
+                }
+              }
+            }
+          }
+        }
       }
     }
   },
@@ -236,6 +199,25 @@ export default {
   },
 
   methods: {
+    // 富文本框图片上传显示
+    uploadSuccess (response, file, fileList) {
+      // 清除加载动画条
+      this.$refs.upload.clearFiles()
+      // 获取富文本组件实例
+      let quill = this.$refs.myQuillEditor.quill
+      // 如果上传成功
+      if (file.response.code == 200) {
+        console.log('返回的图片地址', file.response.data)
+        // 获取光标所在位置
+        let length = quill.getSelection().index
+        // 插入图片  res.info为服务器返回的图片地址
+        quill.insertEmbed(length, 'image', file.response.data)
+        // 调整光标到最后
+        quill.setSelection(length + 1)
+      } else {
+        this.$message.error('图片插入失败')
+      }
+    },
     // 选择当前页面显示多少条数据的选择框发生改变
     handleSizeChange (e) {
       this.pageSize = e
@@ -260,7 +242,11 @@ export default {
       }
       getOtherLists(query).then(res => {
         console.log('获取到公告', res)
-        this.tableData = res.data
+        this.tableData = res.data.map(item => {
+          item.text = JSON.parse(item.text)
+          return item
+        })
+        // this.tableData = res.data
         this.total = res.pageTotal
       })
     },
@@ -286,32 +272,28 @@ export default {
         }
       })
     },
-    //新增相关
+    // 新增相关
     showPost () {
       this.postView = true
-      this.postForm.sort = null
-      this.postForm.img = null
-      this.postForm.text = null
-      this.postForm.typeId = null
-      this.postForm.param = null
+      this.postForm.text = this.text
+      this.postForm.type = 1
     },
     postThis (data) {
-      postGallery(data).then(res => {
+      postOther(data).then(res => {
         this.$message({
           type: 'success',
           message: '新增成功!'
         })
         this.postView = false
-        this.getGalleryList()
+        this.getOtherList()
       }).catch(() => {
         this.$message({
           type: 'warning',
           message: '新增失败'
         })
       })
-
     },
-    //处理banner上传图片
+    // 处理banner上传图片
     upload_success_banner (response, file, fileList) {
       if (file.response.code === '200') {
         this.fileList = []
@@ -320,7 +302,7 @@ export default {
         this.$message.error('上传错误!请重试')
       }
     },
-    //修改相关
+    // 修改相关
     showPut (id) {
       var thisBean = {}
       for (var i = 0; i < this.tableData.length; i++) {
@@ -331,27 +313,19 @@ export default {
       }
       this.putView = true
       this.putForm.id = thisBean.id
-      this.putForm.img = thisBean.img
-      this.putForm.sort = thisBean.sort
-      this.putForm.param = thisBean.param
-      this.putForm.text = thisBean.text
-      // 获取text中的json字段
-      this.text.name = thisBean.text.name
-      this.text.wx = thisBean.text.wx
-      this.text.phone = thisBean.text.phone
-      this.text.bz = thisBean.text.bz
-      this.putForm.typeId = thisBean.typeId
+      this.text.title = thisBean.text.title
+      this.text.content = thisBean.text.content
+      this.putForm.type = 1
     },
     putThis (data) {
       data.text = this.text
-      console.log(data)
-      putGallery(data).then(res => {
+      putOther(data).then(res => {
         this.$message({
           type: 'success',
           message: '修改成功!'
         })
         this.putView = false
-        this.getGalleryList()
+        this.getOtherList()
       }).catch(() => {
         this.$message({
           type: 'warning',
