@@ -15,7 +15,7 @@
       </el-form-item>
       <el-form-item style="float: right;">
         <el-button type="success"
-                   @click="showPost">新增图片</el-button>
+                   @click="showPost">新增图库</el-button>
       </el-form-item>
     </el-form>
 
@@ -48,6 +48,9 @@
       <el-table-column prop="text.wx"
                        label="微信"
                        width="150"></el-table-column>
+      <el-table-column prop="text.industry"
+                       label="行业"
+                       width="200"></el-table-column>
       <el-table-column prop="text.bz"
                        label="备注"
                        width="200"></el-table-column>
@@ -98,9 +101,24 @@
           <el-input v-model="postForm.param"
                     style="width: auto;" />
         </el-form-item>
-        <el-form-item label="描述:">
-          <el-input v-model="postForm.text"
-                    type="textarea"
+        <el-form-item label="昵称">
+          <el-input v-model="text.name"
+                    style="width: auto;" />
+        </el-form-item>
+        <el-form-item label="电话">
+          <el-input v-model="text.phone"
+                    style="width: auto;" />
+        </el-form-item>
+        <el-form-item label="微信">
+          <el-input v-model="text.wx"
+                    style="width: auto;" />
+        </el-form-item>
+        <el-form-item label="行业">
+          <el-input v-model="text.industry"
+                    style="width: auto;" />
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="text.bz"
                     style="width: auto;" />
         </el-form-item>
         <el-form-item label="图片:">
@@ -176,6 +194,10 @@
         </el-form-item>
         <el-form-item label="微信">
           <el-input v-model="text.wx"
+                    style="width: auto;" />
+        </el-form-item>
+        <el-form-item label="行业">
+          <el-input v-model="text.industry"
                     style="width: auto;" />
         </el-form-item>
         <el-form-item label="备注">
@@ -263,7 +285,8 @@ export default {
         wx: null,
         phone: null,
         name: null,
-        bz: null
+        bz: null,
+        industry: null
       }
     }
   },
@@ -311,21 +334,32 @@ export default {
       return parseTime(time)
     },
 
-    // 删除轮播图
+    // 删除图库
     deleteThis (id) {
-      deleteGallery(id).then(res => {
-        if (res.code === '200') {
-          this.$message({
-            type: 'success',
-            message: '操作成功!'
-          })
-          this.getGalleryList()
-        } else {
-          this.$message({
-            type: 'warning',
-            message: '操作失败'
-          })
-        }
+      this.$confirm('是否确认删除', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteGallery(id).then(res => {
+          if (res.code === '200') {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+            this.getGalleryList()
+          } else {
+            this.$message({
+              type: 'warning',
+              message: '操作失败'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     },
     //新增相关
@@ -338,6 +372,7 @@ export default {
       this.postForm.param = null
     },
     postThis (data) {
+      data.text = this.text
       postGallery(data).then(res => {
         this.$message({
           type: 'success',
@@ -382,6 +417,7 @@ export default {
       this.text.wx = thisBean.text.wx
       this.text.phone = thisBean.text.phone
       this.text.bz = thisBean.text.bz
+      this.text.industry = thisBean.text.industry
       this.putForm.typeId = thisBean.typeId
     },
     putThis (data) {

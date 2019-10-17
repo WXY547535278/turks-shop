@@ -33,7 +33,7 @@
                      size="small">删除</el-button>
           <el-button @click.native.prevent="addThis(scope.row.id)"
                      type="text"
-                     size="small">添加图片</el-button>
+                     size="small">添加图库</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -52,7 +52,7 @@
     </div>
 
     <!--  新增图库类型区  -->
-    <el-dialog title="列表"
+    <el-dialog title="新增图库类型"
                :visible.sync="postView"
                width="80%">
       <el-form ref="form"
@@ -79,7 +79,7 @@
 
     </el-dialog>
     <!--  为对应的图库类型添加图片  -->
-    <el-dialog title="列表"
+    <el-dialog title="新增图库"
                :visible.sync="addImage"
                width="80%">
       <el-form ref="form"
@@ -94,9 +94,24 @@
           <el-input v-model="postForm1.param"
                     style="width: auto;" />
         </el-form-item>
-        <el-form-item label="描述:">
-          <el-input v-model="postForm1.text"
-                    type="textarea"
+        <el-form-item label="昵称">
+          <el-input v-model="text.name"
+                    style="width: auto;" />
+        </el-form-item>
+        <el-form-item label="电话">
+          <el-input v-model="text.phone"
+                    style="width: auto;" />
+        </el-form-item>
+        <el-form-item label="微信">
+          <el-input v-model="text.wx"
+                    style="width: auto;" />
+        </el-form-item>
+        <el-form-item label="行业">
+          <el-input v-model="text.industry"
+                    style="width: auto;" />
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="text.bz"
                     style="width: auto;" />
         </el-form-item>
         <el-form-item label="图片:">
@@ -120,6 +135,7 @@
           </el-upload>
 
         </el-form-item>
+
         <hr>
         <el-form-item>
           <el-button type="primary"
@@ -130,7 +146,7 @@
 
     </el-dialog>
     <!--  修改区  -->
-    <el-dialog title="列表"
+    <el-dialog title="修改图库类型"
                :visible.sync="putView"
                width="80%">
       <el-form ref="form"
@@ -206,8 +222,14 @@ export default {
         id: null,
         name: null,
         sort: null
+      },
+      text: {
+        wx: null,
+        phone: null,
+        name: null,
+        bz: null,
+        industry: null
       }
-
     }
   },
 
@@ -225,8 +247,14 @@ export default {
       this.postForm1.text = null
       this.postForm1.typeId = typeId
       this.postForm1.param = null
+      this.text.wx = null
+      this.text.phone = null
+      this.text.name = null
+      this.text.bz = null
+      this.text.industry = null
     },
     postThis1 (data) {
+      data.text = this.text
       postGallery(data).then(res => {
         this.$message({
           type: 'success',
@@ -282,21 +310,32 @@ export default {
       return parseTime(time)
     },
 
-    // 删除轮播图
+    // 删除图库类型
     deleteThis (id) {
-      deleteGalleryType(id).then(res => {
-        if (res.code === '200') {
-          this.$message({
-            type: 'success',
-            message: '操作成功!'
-          })
-          this.getGalleryTypeList()
-        } else {
-          this.$message({
-            type: 'warning',
-            message: '操作失败'
-          })
-        }
+      this.$confirm('是否确认删除', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteGalleryType(id).then(res => {
+          if (res.code === '200') {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+            this.getGalleryTypeList()
+          } else {
+            this.$message({
+              type: 'warning',
+              message: '操作失败'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     },
 
