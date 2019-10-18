@@ -39,3 +39,12 @@ export function delMessage(unionid) {
         method: 'delete'
     })
 }
+
+// 发送短信
+export function SendMessage(data, param) {
+    return request({
+        url: '/sms/batch?' + param,
+        method: 'post',
+        data
+    })
+}

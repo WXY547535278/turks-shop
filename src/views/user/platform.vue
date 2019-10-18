@@ -78,7 +78,7 @@
                        label="操作"
                        width="120">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="showNext(scope.row.id)"
+          <!-- <el-button @click.native.prevent="showNext(scope.row.id)"
                      type="text"
                      size="small">查看下级</el-button>
           <el-button @click.native.prevent="showUser(scope.row.id)"
@@ -89,7 +89,18 @@
                      size="small">修改</el-button>
           <el-button @click.native.prevent="deleteThis(scope.row.id,1)"
                      type="text"
-                     size="small">删除</el-button>
+                     size="small">删除</el-button> -->
+          <el-dropdown>
+            <el-button type="primary">
+              更多操作<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native.prevent="showNext(scope.row.id)">查看下级</el-dropdown-item>
+              <el-dropdown-item @click.native.prevent="showUser(scope.row.id)">帮忙注册的用户</el-dropdown-item>
+              <el-dropdown-item @click.native.prevent="showPut(scope.row.id)">修改</el-dropdown-item>
+              <el-dropdown-item @click.native.prevent="deleteThis(scope.row.id,1)">删除</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>

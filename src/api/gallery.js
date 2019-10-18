@@ -13,8 +13,8 @@ export function getGallery(id) {
  */
 export function getGalleryList(query) {
     var url = '/gallery?pageIndex=' + query.pageIndex + '&pageSize=' + query.pageSize
-    if (query.typeId) {
-        url += '&typeId=' + query.typeId
+    if (query.textLike) {
+        url += '&textLike=' + query.textLike
     }
     return request({
         url: url,

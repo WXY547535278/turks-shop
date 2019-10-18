@@ -30,6 +30,10 @@
         <el-button type="primary"
                    @click="onSubmit">查询</el-button>
       </el-form-item>
+      <el-form-item style="float: right;">
+        <el-button type="success"
+                   @click="showPost">给所有用户发送短信</el-button>
+      </el-form-item>
     </el-form>
 
     <el-table :data="tableData">
@@ -67,12 +71,21 @@
                        label="操作"
                        width="120">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="showList(scope.row.id)"
+          <!-- <el-button @click.native.prevent="showList(scope.row.id)"
                      type="text"
                      size="small">查看详情</el-button>
           <el-button @click.native.prevent="deleteThis(scope.row.id,1)"
                      type="text"
-                     size="small">删除</el-button>
+                     size="small">删除</el-button> -->
+          <el-dropdown>
+            <el-button type="primary">
+              更多操作<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native.prevent="showList(scope.row.id)">查看详情</el-dropdown-item>
+              <el-dropdown-item @click.native.prevent="deleteThis(scope.row.id,1)">删除</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -112,11 +125,28 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+
+    <el-dialog title="发送短信"
+               :visible.sync="showView1"
+               width="80%">
+      <el-form ref="form"
+               label-width="80px">
+        <el-form-item label="短信内容">
+          <el-input type="textarea"
+                    v-model="text"
+                    style="width:400px"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary"
+                     @click="sendMsg(text)">发送</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getMessageList, getMessageById, delMessage } from "@/api/message";
+import { getMessageList, getMessageById, delMessage, SendMessage } from "@/api/message";
 import { parseTime } from "@/utils/index"
 
 export default {
@@ -127,6 +157,7 @@ export default {
       payclass: [],
       currentPage4: 1,
       showView: false,
+      showView1: false,
       pageindex: 0, // 当前页
       pageSize: 10, // 每页数量
       total: 0, // 数量总条数
@@ -141,7 +172,8 @@ export default {
         userName: null,
         userPhone: null,
         param: null
-      }
+      },
+      text: null // 短信内容
     }
   },
   mounted () {
@@ -152,6 +184,16 @@ export default {
   },
 
   methods: {
+    // 发送短信
+    sendMsg() {
+      var data = {}
+      SendMessage(data, this.text).then(res => {
+        console.log('发送成功')
+      })
+    },
+    showPost () {
+      this.showView1 = true
+    },
     showList (id) {
       this.showView = true
       getMessageById(id).then(res => {

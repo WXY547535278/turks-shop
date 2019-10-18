@@ -8,12 +8,12 @@
       <!-- <el-form-item label="id">
         <el-input v-model="formInline.id"
                   placeholder="id"></el-input>
-      </el-form-item>
+      </el-form-item> -->
 
       <el-form-item label="用户id">
         <el-input v-model="formInline.userId"
                   placeholder="用户id"></el-input>
-      </el-form-item> -->
+      </el-form-item>
 
       <el-form-item label="产品状态">
         <el-select v-model="formInline.status"
@@ -36,10 +36,10 @@
       <!-- 产品信息 -->
       <!-- <el-table-column prop="id"
                        label="id"
-                       width="150"></el-table-column>
+                       width="150"></el-table-column> -->
       <el-table-column prop="userId"
                        label="用户id"
-                       width="150"></el-table-column> -->
+                       width="150"></el-table-column>
       <el-table-column prop="name"
                        label="产品名"
                        width="150"></el-table-column>
@@ -70,9 +70,19 @@
                        label="操作"
                        width="120">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="showProductDetail(scope.row.id)"
+          <!-- <el-button @click.native.prevent="showProductDetail(scope.row.id)"
                      type="text"
-                     size="small">查看产品规格</el-button>
+                     size="small">查看产品规格</el-button> -->
+          <el-dropdown>
+            <el-button type="primary">
+              更多操作<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native.prevent="showProductDetail(scope.row.id)">查看产品规格</el-dropdown-item>
+              <el-dropdown-item @click.native.prevent="putProductStatus(scope.row.id)">修改商品状态</el-dropdown-item>
+              <el-dropdown-item @click.native.prevent="deleteThis(scope.row.id)">删除</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -115,11 +125,33 @@
       </el-table>
     </el-dialog>
 
+    <!-- 修改产品状态  -->
+    <el-dialog title="修改状态"
+               :visible.sync="showView1"
+               width="80%">
+      <el-form ref="form"
+               :model="putForm"
+               label-width="120px">
+        <el-form-item label="商品状态 ">
+          <el-select v-model="putForm.status"
+                     placeholder="商品状态">
+            <el-option label="上架 "
+                       value="1"></el-option>
+            <el-option label="下架"
+                       value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary"
+                     @click="putThis()">修改</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getProductList, getSku, } from "@/api/product";
+import { getProductList, getSku, deleteProduct, putProduct} from "@/api/product";
 import { parseTime } from "@/utils/index"
 
 export default {
@@ -129,6 +161,7 @@ export default {
       tableData: [],
       currentPage4: 1,
       showView: false,
+      showView1: false,
       productDetail: null,
       putForm: {
         id: null,
@@ -153,6 +186,27 @@ export default {
   },
 
   methods: {
+    // 修改产品状态
+    putProductStatus (id) {
+      this.putForm.id = id
+      this.showView1 = true
+    },
+    // 修改审核状态
+    putThis () {
+      putProduct(this.putForm).then(res => {
+        this.$message({
+          type: 'success',
+          message: '修改成功!'
+        })
+        this.showView1 = false
+        this.getProductList()
+      }).catch(() => {
+        this.$message({
+          type: 'warning',
+          message: '修改失败'
+        })
+      })
+    },
     // 查看订单详情
     showProductDetail (orderId) {
       this.showView = true
@@ -160,6 +214,34 @@ export default {
       getSku(orderId).then(res => {
         console.log('获产品详情', res)
         this.productDetail = res.data
+      })
+    },
+    // 删除产品
+    deleteThis (id) {
+      this.$confirm('是否确认删除', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteProduct(id).then(res => {
+          if (res.code === '200') {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+            this.getProductList()
+          } else {
+            this.$message({
+              type: 'warning',
+              message: '操作失败'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     },
     // 选择当前页面显示多少条数据的选择框发生改变

@@ -273,21 +273,21 @@ export const constantRoutes = [{
         }]
     },
     // 帮忙注册
-    {
-        path: '/dragDown',
-        component: Layout,
-        redirect: '/dragDown/list',
-        children: [{
-            path: 'dragDownlist',
-            name: 'DragDownlist',
-            component: () =>
-                import ('@/views/dragDown/list'),
-            meta: {
-                title: '帮忙注册',
-                icon: 'dashboard'
-            }
-        }]
-    },
+    // {
+    //     path: '/dragDown',
+    //     component: Layout,
+    //     redirect: '/dragDown/list',
+    //     children: [{
+    //         path: 'dragDownlist',
+    //         name: 'DragDownlist',
+    //         component: () =>
+    //             import ('@/views/dragDown/list'),
+    //         meta: {
+    //             title: '帮忙注册',
+    //             icon: 'dashboard'
+    //         }
+    //     }]
+    // },
     // 组织架构
     // {
     //     path: '/tree',

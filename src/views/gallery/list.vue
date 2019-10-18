@@ -5,9 +5,9 @@
     <el-form :inline="true"
              :model="formInline"
              class="demo-form-inline">
-      <el-form-item label="类型id">
-        <el-input v-model="formInline.typeId"
-                  placeholder="类型id"></el-input>
+      <el-form-item label="类型名">
+        <el-input v-model="formInline.textLike"
+                  placeholder="类型名"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary"
@@ -56,12 +56,21 @@
                        label="操作"
                        width="120">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="showPut(scope.row.id)"
+          <!-- <el-button @click.native.prevent="showPut(scope.row.id)"
                      type="text"
                      size="small">修改</el-button>
           <el-button @click.native.prevent="deleteThis(scope.row.id)"
                      type="text"
-                     size="small">删除</el-button>
+                     size="small">删除</el-button> -->
+          <el-dropdown>
+            <el-button type="primary">
+              更多操作<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native.prevent="showPut(scope.row.id)">修改</el-dropdown-item>
+              <el-dropdown-item @click.native.prevent="deleteThis(scope.row.id)">删除</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -260,7 +269,7 @@ export default {
       status: null,
       // 搜索内容
       formInline: {
-        typeId: null
+        textLike: null
       },
       fileList: [],
       putView: false,
@@ -314,7 +323,7 @@ export default {
       let query = {
         pageIndex: this.pageindex,
         pageSize: this.pageSize,
-        typeId: this.formInline.typeId
+        textLike: this.formInline.textLike
       }
       getGalleryList(query).then(res => {
         console.log('获取到的图库', res)
@@ -448,6 +457,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.el-dropdown {
+  vertical-align: top;
+}
+.el-dropdown + .el-dropdown {
+  margin-left: 15px;
+}
+.el-icon-arrow-down {
+  font-size: 12px;
+}
 .blockpage {
   padding-top: 2%;
 }

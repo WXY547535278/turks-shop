@@ -20,7 +20,7 @@
         <el-select v-model="formInline.status"
                    placeholder="用户状态"
                    @change="onSubmit">
-          <el-option label="正常使用过 "
+          <el-option label="正常使用"
                      value="1"></el-option>
           <el-option label="暂时停用"
                      value="2"></el-option>
@@ -36,9 +36,9 @@
 
     <el-table :data="tableData">
       <!-- 用户信息 -->
-      <!-- <el-table-column prop="id"
+      <el-table-column prop="id"
                        label="id"
-                       width="250"></el-table-column> -->
+                       width="250"></el-table-column>
       <el-table-column prop="name"
                        label="昵称"
                        width="200"></el-table-column>
@@ -121,7 +121,7 @@
                        label="操作"
                        width="120">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="showNext(scope.row.id)"
+          <!-- <el-button @click.native.prevent="showNext(scope.row.id)"
                      type="text"
                      size="small">查看下级</el-button>
           <el-button @click.native.prevent="showAddress(scope.row.id)"
@@ -129,7 +129,19 @@
                      size="small">查看用户地址</el-button>
           <el-button @click.native.prevent="showUser(scope.row.id)"
                      type="text"
-                     size="small">帮忙注册的用户</el-button>
+                     size="small">帮忙注册的用户</el-button> -->
+          <el-dropdown>
+            <el-button type="primary">
+              更多操作<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native.prevent="showNext(scope.row.id)">查看下级</el-dropdown-item>
+              <el-dropdown-item @click.native.prevent="showAddress(scope.row.id)">查看用户地址</el-dropdown-item>
+              <el-dropdown-item @click.native.prevent="showUser(scope.row.id)">帮忙注册的用户</el-dropdown-item>
+              <el-dropdown-item @click.native.prevent="showPutStatus(scope.row.id)">修改用户状态</el-dropdown-item>
+              <!-- <el-dropdown-item @click.native.prevent="deleteThis(scope.row.id,1)">删除用户</el-dropdown-item> -->
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -289,11 +301,36 @@
       </el-card>
     </el-dialog> -->
 
+    <!-- 修改普通用户状态  -->
+    <el-dialog title="操作"
+               :visible.sync="showView3"
+               width="80%">
+      <el-form ref="form"
+               :model="putStatus"
+               label-width="120px">
+        <el-form-item label="用户状态 ">
+          <el-select v-model="putStatus.status"
+                     placeholder="用户状态"
+                     @change="onSubmit">
+            <el-option label="正常使用"
+                       value="1"></el-option>
+            <el-option label="暂时停用"
+                       value="2"></el-option>
+            <el-option label="永久停用"
+                       value="3"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary"
+                     @click="putStatu()">修改</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getUserList, getClassById, delUser } from "@/api/user"
+import { getUserList, getClassById, delUser, putUser } from "@/api/user"
 import { getAddressList, getAddressById } from "@/api/address"
 import { getdragDownList } from "@/api/dragDown"
 import { getUserTeam } from "@/api/team"
@@ -314,6 +351,7 @@ export default {
       showView: false,
       showView1: false,
       showView2: false,
+      showView3: false,
       // showView2: false,
       pageindex: 0, // 当前页
       pageSize: 10, // 每页数量
@@ -342,7 +380,12 @@ export default {
         detail: null
       },
       id1: null,
-      id2: null
+      id2: null,
+      // 修改用户状态
+      putStatus: {
+        id: null,
+        status: null
+      }
     }
   },
   mounted () {
@@ -389,6 +432,61 @@ export default {
       this.pageindex2 = e - 1
       this.getdragDownList(this.id2)
     },
+    showPutStatus (id) {
+      this.putStatus.id = id
+      this.showView3 = true
+    },
+    // 修改用户状态
+    putStatu () {
+      var data = {
+        id: this.putStatus.id,
+        status: this.putStatus.status
+      }
+      putUser(data).then(res => {
+        if (res.code === '200') {
+          this.$message({
+            type: 'success',
+            message: '操作成功!'
+          })
+          this.showView3 = false
+          this.getUserList()
+        } else {
+          this.$message({
+            type: 'warning',
+            message: '操作失败'
+          })
+          // this.showView3 = false
+        }
+      })
+    },
+    // 删除普通用户
+    // deleteThis (id) {
+    //   this.$confirm('是否确认删除', '提示', {
+    //     confirmButtonText: '确定',
+    //     cancelButtonText: '取消',
+    //     type: 'warning'
+    //   }).then(() => {
+    //     delUser(id).then(res => {
+    //       if (res.code === '200') {
+    //         this.$message({
+    //           type: 'success',
+    //           message: '操作成功!'
+    //         })
+    //         this.getUserList()
+    //       } else {
+    //         this.$message({
+    //           type: 'warning',
+    //           message: '操作失败'
+    //         })
+    //       }
+    //     })
+    //   }).catch(() => {
+    //     this.$message({
+    //       type: 'info',
+    //       message: '已取消删除'
+    //     })
+    //   })
+    // },
     // 搜索
     onSubmit () {
       this.getUserList()
@@ -488,7 +586,7 @@ export default {
         console.log('获取到的用户列表', res)
         this.tableData = res.data.map(item => {
           if (item.status == 1) {
-            item.status = '正常使用过'
+            item.status = '正常使用'
           } else if (item.status == 2) {
             item.status = '暂时停用'
           } else {
@@ -509,6 +607,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.el-dropdown {
+  vertical-align: top;
+}
+.el-dropdown + .el-dropdown {
+  margin-left: 15px;
+}
+.el-icon-arrow-down {
+  font-size: 12px;
+}
 .blockpage {
   padding-top: 2%;
 }

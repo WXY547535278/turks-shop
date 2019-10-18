@@ -61,7 +61,7 @@
       </el-table-column>
       <el-table-column prop="text"
                        label="投诉内容"
-                       width="200"></el-table-column>
+                       width="400"></el-table-column>
       <!-- 投诉人 -->
       <!-- <el-table-column prop="masterId"
                        label="投诉人id"
@@ -95,12 +95,21 @@
                        label="操作"
                        width="120">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="putList(scope.row.id)"
+          <!-- <el-button @click.native.prevent="putList(scope.row.id)"
                      type="text"
                      size="small">审核</el-button>
           <el-button @click.native.prevent="deleteThis(scope.row.id)"
                      type="text"
-                     size="small">删除</el-button>
+                     size="small">删除</el-button> -->
+          <el-dropdown>
+            <el-button type="primary">
+              更多操作<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native.prevent="putList(scope.row.id)">审核</el-dropdown-item>
+              <el-dropdown-item @click.native.prevent="deleteThis(scope.row.id)">删除</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -278,6 +287,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.el-dropdown {
+  vertical-align: top;
+}
+.el-dropdown + .el-dropdown {
+  margin-left: 15px;
+}
+.el-icon-arrow-down {
+  font-size: 12px;
+}
 .blockpage {
   padding-top: 2%;
 }

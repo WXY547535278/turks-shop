@@ -15,9 +15,9 @@
                        width="250"></el-table-column> -->
       <el-table-column prop="sort"
                        label="排序序号"
-                       width="250"></el-table-column>
+                       width="auto"></el-table-column>
       <el-table-column label="图片"
-                       width="300">
+                       width="auto">
         <template slot-scope="scope"><img style="width: 100px; height: 100px"
                :src="scope.row.img"
                fit="fill" />
@@ -25,18 +25,27 @@
       </el-table-column>
       <el-table-column prop="param"
                        label="跳转url"
-                       width="300"></el-table-column>
+                       width="auto"></el-table-column>
 
       <el-table-column fixed="right"
                        label="操作"
-                       width="120">
+                       width="auto">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="showPut(scope.row.id)"
+          <!-- <el-button @click.native.prevent="showPut(scope.row.id)"
                      type="text"
                      size="small">修改</el-button>
           <el-button @click.native.prevent="deleteThis(scope.row.id)"
                      type="text"
-                     size="small">删除</el-button>
+                     size="small">删除</el-button> -->
+          <el-dropdown>
+            <el-button type="primary">
+              更多操作<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native.prevent="showPut(scope.row.id)">修改</el-dropdown-item>
+              <el-dropdown-item @click.native.prevent="deleteThis(scope.row.id)">删除</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -347,6 +356,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.el-dropdown {
+  vertical-align: top;
+}
+.el-dropdown + .el-dropdown {
+  margin-left: 15px;
+}
+.el-icon-arrow-down {
+  font-size: 12px;
+}
 .blockpage {
   padding-top: 2%;
 }
