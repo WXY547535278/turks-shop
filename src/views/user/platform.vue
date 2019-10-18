@@ -78,6 +78,12 @@
                        label="操作"
                        width="120">
         <template slot-scope="scope">
+          <el-button @click.native.prevent="showNext(scope.row.id)"
+                     type="text"
+                     size="small">查看下级</el-button>
+          <el-button @click.native.prevent="showUser(scope.row.id)"
+                     type="text"
+                     size="small">帮忙注册的用户</el-button>
           <el-button @click.native.prevent="showPut(scope.row.id)"
                      type="text"
                      size="small">修改</el-button>
@@ -93,7 +99,7 @@
          style="margin:0px auto">
       <el-pagination @size-change="handleSizeChange"
                      @current-change="handleCurrentChange"
-                     :current-page="currentPage4"
+                     :current-page="currentPage"
                      :page-sizes="[10, 20, 30, 40]"
                      :page-size="pageSize"
                      layout="total, sizes, prev, pager, next, jumper"
@@ -237,12 +243,98 @@
 
     </el-dialog>
 
+    <!--  查看下级用户区域  -->
+    <el-dialog title="查看下级用户"
+               :visible.sync="showView"
+               width="80%">
+      <el-table :data="tableData1">
+        <el-table-column label="下级头像"
+                         width="150">
+          <template slot-scope="scope"><img v-image-preview
+                 style="width: 35px; height: 35px"
+                 :src="scope.row.leekImg"
+                 fit="fill" /></template>
+        </el-table-column>
+        <el-table-column prop="leekName"
+                         label="下级姓名"
+                         width="150"></el-table-column>
+        <el-table-column prop="leekPhone"
+                         label="下级电话"
+                         width="150"></el-table-column>
+        <el-table-column prop="leekRank"
+                         label="下级等级"
+                         width="150"></el-table-column>
+        <el-table-column prop="leekStatus"
+                         label="下级状态"
+                         width="150"></el-table-column>
+        <el-table-column label="下级创建时间"
+                         width="150">
+          <template slot-scope="scope">{{ parseTime(scope.row.leekTime) }}</template>
+        </el-table-column>
+        <el-table-column prop="leekWechat"
+                         label="下级微信号码"
+                         width="150"></el-table-column>
+        <el-table-column prop="type"
+                         label="下级类型"
+                         width="150"></el-table-column>
+        <!-- <el-table-column prop="masterRank"
+                         label="上级的等级"
+                         width="150"></el-table-column> -->
+      </el-table>
+      <div class="blockpage"
+           style="margin:0px auto">
+        <el-pagination @size-change="handleSizeChange1"
+                       @current-change="handleCurrentChange1"
+                       :current-page="currentPage1"
+                       :page-sizes="[10, 20, 30, 40]"
+                       :page-size="pageSize1"
+                       layout="total, sizes, prev, pager, next, jumper"
+                       :total="total1">
+        </el-pagination>
+      </div>
+    </el-dialog>
+
+    <!--  查看帮忙注册的用户区域  -->
+    <el-dialog title="查看帮忙注册的用户"
+               :visible.sync="showView1"
+               width="80%">
+      <el-table :data="tableData2">
+        <!-- 帮助注册信息 -->
+        <el-table-column prop="leekName"
+                         label="名字"
+                         width="auto"></el-table-column>
+        <el-table-column prop="leekPhone"
+                         label="手机号"
+                         width="auto"></el-table-column>
+        <el-table-column prop="leekWechat"
+                         label="微信"
+                         width="auto"></el-table-column>
+        <el-table-column label="注册时间"
+                         width="auto">
+          <template slot-scope="scope">{{ parseTime(scope.row.time) }}</template>
+        </el-table-column>
+      </el-table>
+      <div class="blockpage"
+           style="margin:0px auto">
+        <el-pagination @size-change="handleSizeChange2"
+                       @current-change="handleCurrentChange2"
+                       :current-page="currentPage2"
+                       :page-sizes="[10, 20, 30, 40]"
+                       :page-size="pageSize2"
+                       layout="total, sizes, prev, pager, next, jumper"
+                       :total="total2">
+        </el-pagination>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
 import { getUserList, delUser, postUser, putUser } from "@/api/user";
 import { parseTime } from "@/utils/index"
+import { getdragDownList } from "@/api/dragDown"
+import { getUserTeam } from "@/api/team"
 import { getUploadUrl } from '@/utils/index'
 import { getToken } from '@/utils/auth.js'
 
@@ -254,13 +346,26 @@ export default {
         Authorization: getToken()
       }, // 上传请求头
       tableData: [],
+      tableData1: [],
+      tableData2: [],
       payclass: [],
       fileList: [],
-      currentPage4: 1,
+      currentPage: 1,
+      currentPage1: 1,
+      currentPage2: 1,
       showView: false,
+      showView1: false,
       pageindex: 0, // 当前页
       pageSize: 10, // 每页数量
       total: 0, // 数量总条数
+      // 下级用户
+      pageindex1: 0,
+      pageSize1: 10,
+      total1: 0,
+      // 帮忙注册
+      pageindex2: 0,
+      pageSize2: 10,
+      total2: 0,
       // 搜索内容
       formInline: {
         status: 1,
@@ -291,7 +396,9 @@ export default {
         wechatCode: null,
         password: null,
         score: null
-      }
+      },
+      id1: null,
+      id2: null
     }
   },
   mounted () {
@@ -314,9 +421,52 @@ export default {
       this.pageindex = e - 1
       this.getUserList()
     },
+    // 选择当前页面显示多少条数据的选择框发生改变
+    handleSizeChange1 (e) {
+      // console.log('当前每页数量', e)
+      this.pageSize1 = e
+      this.getUserTeam(this.id1)
+    },
+    // 分页改变 e点击的页码  用户手动输入了页面然后go
+    handleCurrentChange1 (e) {
+      // console.log('当前页码', e)
+      this.pageindex1 = e - 1
+      this.getUserTeam(this.id1)
+    },
+    // 选择当前页面显示多少条数据的选择框发生改变
+    handleSizeChange2 (e) {
+      // console.log('当前每页数量', e)
+      this.pageSize2 = e
+      this.getdragDownList(this.id2)
+    },
+    // 分页改变 e点击的页码  用户手动输入了页面然后go
+    handleCurrentChange2 (e) {
+      // console.log('当前页码', e)
+      this.pageindex2 = e - 1
+      this.getdragDownList(this.id2)
+    },
     // 搜索
     onSubmit () {
       this.getUserList()
+    },
+    // 帮忙注册列表
+    showUser (id) {
+      this.getdragDownList(id)
+      this.showView1 = true
+      this.id2 = id
+    },
+    // 获取帮忙注册列表
+    getdragDownList (id) {
+      let query = {
+        pageIndex: this.pageindex2,
+        pageSize: this.pageSize2,
+        userId: id
+      }
+      getdragDownList(query).then(res => {
+        console.log('获取到的帮助注册列表', res)
+        this.tableData2 = res.data
+        this.total2 = res.pageTotal
+      })
     },
     // 获取用户列表
     getUserList () {
@@ -333,6 +483,40 @@ export default {
         console.log('获取到的用户列表', res)
         this.tableData = res.data
         this.total = res.pageTotal
+      })
+    },
+    // 查看下级
+    showNext (user_id) {
+      this.getUserTeam(user_id)
+      this.showView = true
+      this.id1 = user_id
+    },
+    // 获取下级用户列表
+    getUserTeam (user_id) {
+      let query = {
+        pageIndex: this.pageindex1,
+        pageSize: this.pageSize1,
+        userId: user_id
+      }
+      getUserTeam(query).then(res => {
+        console.log('获取到的团队列表', res)
+        this.tableData1 = res.data.map(item => {
+          if (item.leekStatus == 1) {
+            item.leekStatus = '正常使用过'
+          } else if (item.leekStatus == 2) {
+            item.leekStatus = '暂时停用'
+          } else {
+            item.leekStatus = '永久停用'
+          }
+          if (item.type == 1) {
+            item.type = '直推'
+          } else {
+            item.type = '下级发展的'
+          }
+          return item
+        })
+        // this.tableData = res.data
+        this.total1 = res.pageTotal
       })
     },
     // 格式化时间

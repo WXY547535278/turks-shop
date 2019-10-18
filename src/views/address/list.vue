@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import { getAddressList,getAddressById } from "@/api/address";
+import { getAddressList, getAddressById } from "@/api/address"
 import { parseTime } from "@/utils/index"
 
 export default {

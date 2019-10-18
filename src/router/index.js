@@ -112,21 +112,21 @@ export const constantRoutes = [{
         }]
     },
     // 团队管理
-    {
-        path: '/team',
-        component: Layout,
-        redirect: '/team/list',
-        children: [{
-            path: 'teamlist',
-            name: 'Teamlist',
-            component: () =>
-                import ('@/views/team/list'),
-            meta: {
-                title: '团队管理',
-                icon: 'dashboard'
-            }
-        }]
-    },
+    // {
+    //     path: '/team',
+    //     component: Layout,
+    //     redirect: '/team/list',
+    //     children: [{
+    //         path: 'teamlist',
+    //         name: 'Teamlist',
+    //         component: () =>
+    //             import ('@/views/team/list'),
+    //         meta: {
+    //             title: '团队管理',
+    //             icon: 'dashboard'
+    //         }
+    //     }]
+    // },
     // 投诉管理
     {
         path: '/complaint',
@@ -225,21 +225,21 @@ export const constantRoutes = [{
         }]
     },
     // 地址管理
-    {
-        path: '/address',
-        component: Layout,
-        redirect: '/address/list',
-        children: [{
-            path: 'addresslist',
-            name: 'Addresslist',
-            component: () =>
-                import ('@/views/address/list'),
-            meta: {
-                title: '用户地址',
-                icon: 'dashboard'
-            }
-        }]
-    },
+    // {
+    //     path: '/address',
+    //     component: Layout,
+    //     redirect: '/address/list',
+    //     children: [{
+    //         path: 'addresslist',
+    //         name: 'Addresslist',
+    //         component: () =>
+    //             import ('@/views/address/list'),
+    //         meta: {
+    //             title: '用户地址',
+    //             icon: 'dashboard'
+    //         }
+    //     }]
+    // },
     // 图库类型
     {
         path: '/galleryType',
@@ -289,21 +289,21 @@ export const constantRoutes = [{
         }]
     },
     // 组织架构
-    {
-        path: '/tree',
-        component: Layout,
-        redirect: '/tree/list',
-        children: [{
-            path: 'treelist',
-            name: 'Treelist',
-            component: () =>
-                import ('@/views/tree/list'),
-            meta: {
-                title: '组织架构',
-                icon: 'dashboard'
-            }
-        }]
-    },
+    // {
+    //     path: '/tree',
+    //     component: Layout,
+    //     redirect: '/tree/list',
+    //     children: [{
+    //         path: 'treelist',
+    //         name: 'Treelist',
+    //         component: () =>
+    //             import ('@/views/tree/list'),
+    //         meta: {
+    //             title: '组织架构',
+    //             icon: 'dashboard'
+    //         }
+    //     }]
+    // },
     // 用户管理
     {
         path: '/other',

@@ -127,7 +127,7 @@
 </template>
 
 <script>
-import { getUserTeam, delUserTeam } from "@/api/team";
+import { getUserTeam, delUserTeam } from "@/api/team"
 import { parseTime } from "@/utils/index"
 
 export default {
@@ -175,7 +175,7 @@ export default {
     onSubmit () {
       this.getUserTeam()
     },
-    // 获取用户列表
+    // 获取下级用户列表
     getUserTeam () {
       let query = {
         pageIndex: this.pageindex,

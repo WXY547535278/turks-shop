@@ -72,7 +72,7 @@
         <template slot-scope="scope">
           <el-button @click.native.prevent="showProductDetail(scope.row.id)"
                      type="text"
-                     size="small">查看产品详情</el-button>
+                     size="small">查看产品规格</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -90,7 +90,7 @@
     </div>
 
     <!-- 查看产品详情  -->
-    <el-dialog title="操作"
+    <el-dialog title="规格详情"
                :visible.sync="showView"
                width="80%">
       <el-table :data="productDetail">

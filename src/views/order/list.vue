@@ -133,12 +133,12 @@
                :visible.sync="showView"
                width="80%">
       <el-table :data="orderDetail">
-        <el-table-column prop="id"
+        <!-- <el-table-column prop="id"
                          label="id"
                          width="300"></el-table-column>
         <el-table-column prop="productId"
                          label="产品id"
-                         width="300"></el-table-column>
+                         width="300"></el-table-column> -->
         <el-table-column prop="name"
                          label="产品名"
                          width="300"></el-table-column>
@@ -168,7 +168,7 @@
 </template>
 
 <script>
-import { getOrderList, getOrderDetail, } from "@/api/order";
+import { getOrderList, getOrderDetail } from "@/api/order"
 import { parseTime } from "@/utils/index"
 
 export default {

@@ -36,7 +36,7 @@
 
     <el-table :data="tableData">
       <!-- 评价列表 -->
-      <el-table-column prop="id"
+      <!-- <el-table-column prop="id"
                        label="id"
                        width="250"></el-table-column>
       <el-table-column prop="userId"
@@ -44,26 +44,25 @@
                        width="200"></el-table-column>
       <el-table-column prop="orderId"
                        label="订单id"
-                       width="200"></el-table-column>
+                       width="200"></el-table-column> -->
       <el-table-column prop="type"
                        label="评价类型"
-                       width="150"></el-table-column>
+                       width="auto"></el-table-column>
       <el-table-column label="评价时间"
-                       width="150">
+                       width="auto">
         <template slot-scope="scope">{{ parseTime(scope.row.time) }}</template>
       </el-table-column>
-      <!-- <el-table-column fixed="right"
+      <el-table-column fixed="right"
                        label="操作"
-                       width="120">
+                       width="auto">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="showList(scope.row.id)"
+          <el-button @click.native.prevent="showOrderList(scope.row.orderId)"
                      type="text"
-                     size="small">查看详情</el-button>
+                     size="small">查看评价订单</el-button>
         </template>
-      </el-table-column> -->
+      </el-table-column>
     </el-table>
     <!-- 分页区 -->
-
     <div class="blockpage"
          style="margin:0px auto">
       <el-pagination @size-change="handleSizeChange"
@@ -75,10 +74,97 @@
                      :total="total">
       </el-pagination>
     </div>
+
+    <!--  查看订单区域  -->
+    <el-dialog title="地址"
+               :visible.sync="showView"
+               width="80%">
+      <el-table :data="tableData1">
+        <el-table-column prop="leekName"
+                         label="下单人姓名"
+                         width="150"></el-table-column>
+        <el-table-column prop="leekPhone"
+                         label="下单人电话"
+                         width="150"></el-table-column>
+        <el-table-column prop="leekWechat"
+                         label="下单人微信"
+                         width="150"></el-table-column>
+        <el-table-column prop="leekZfb"
+                         label="下单人支付宝"
+                         width="150"></el-table-column>
+        <el-table-column label="下单人头像"
+                         width="150">
+          <template slot-scope="scope"><img v-image-preview
+                 style="width: 35px; height: 35px"
+                 :src="scope.row.leekImg"
+                 fit="fill" /></template>
+        </el-table-column>
+        <!-- <el-table-column prop="status"
+                         label="订单状态"
+                         width="150"></el-table-column> -->
+        <el-table-column prop="deliveryType"
+                         label="配送类型"
+                         width="150"></el-table-column>
+        <el-table-column prop="rank"
+                         label="下单人当前等级"
+                         width="150"></el-table-column>
+        <el-table-column prop="aldebaran"
+                         label="下单人下单后等级"
+                         width="150"></el-table-column>
+        <el-table-column prop="amount"
+                         label="订单总金额"
+                         width="150"></el-table-column>
+        <el-table-column prop="address"
+                         label="地址"
+                         width="150"></el-table-column>
+        <el-table-column label="下单时间"
+                         width="150">
+          <template slot-scope="scope">{{ parseTime(scope.row.orderTime) }}</template>
+        </el-table-column>
+        <el-table-column fixed="right"
+                         label="操作"
+                         width="120">
+          <template slot-scope="scope">
+            <el-button @click.native.prevent="showOrderDetail(scope.row.id)"
+                       type="text"
+                       size="small">查看订单详情</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
+
+    <!-- 查看订单详情  -->
+    <el-dialog title="查看详情"
+               :visible.sync="showView1"
+               width="80%">
+      <el-table :data="orderDetail">
+        <el-table-column prop="name"
+                         label="产品名"
+                         width="300"></el-table-column>
+        <el-table-column label="图片"
+                         width="150">
+          <template slot-scope="scope"><img v-image-preview
+                 style="width: 35px; height: 35px"
+                 :src="JSON.parse(scope.row.banner)"
+                 fit="fill" /></template>
+        </el-table-column>
+        <el-table-column prop="skuName"
+                         label="规格名"
+                         width="300"></el-table-column>
+        <el-table-column prop="num"
+                         label="购买数量"
+                         width="300"></el-table-column>
+        <el-table-column prop="price"
+                         label="价格"
+                         width="300"></el-table-column>
+      </el-table>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
+import { getOrderList, getOrderDetail } from "@/api/order"
 import { getEvaluateList } from "@/api/evaluate";
 import { parseTime } from "@/utils/index"
 
@@ -87,8 +173,12 @@ export default {
   data () {
     return {
       tableData: [],
+      tableData1: [],
+      orderDetail: null,
       payclass: [],
       currentPage4: 1,
+      showView: false,
+      showView1: false,
       pageindex: 0, // 当前页
       pageSize: 10, // 每页数量
       total: 0, // 数量总条数
@@ -125,7 +215,53 @@ export default {
     onSubmit () {
       this.getEvaluateList()
     },
-    // 获取用户列表
+    // 查看订单列表
+    showOrderList (order_id) {
+      this.showView = true
+      this.getOrderList(order_id)
+    },
+    // 查看订单详情
+    showOrderDetail (orderId) {
+      this.showView1 = true
+      console.log('获取到的订单id', orderId)
+      getOrderDetail(orderId).then(res => {
+        console.log('获取订单详情', res)
+        this.orderDetail = res.data
+      })
+    },
+    // 获取订单列表
+    getOrderList (order_id) {
+      let query = {
+        pageIndex: 0,
+        pageSize: 10,
+        id: order_id
+      }
+      getOrderList(query).then(res => {
+        console.log('获取订单列表', res)
+        this.tableData1 = res.data.map(item => {
+          if (item.status == 1) {
+            item.status = '还未审核 '
+          } else if (item.status == 2) {
+            item.status = '已经审核/待发货'
+          } else if (item.status == 3) {
+            item.status = '已发货/未收货'
+          } else if (item.status == 4){
+            item.status = '已收货/未评论'
+          } else {
+            item.status = '已评论 '
+          }
+          if (item.deliveryType == 1) {
+            item.deliveryType = '自提'
+          } else {
+            item.deliveryType = '邮寄'
+          }
+          return item
+        })
+        // this.tableData = res.data
+        // this.total = res.pageTotal
+      })
+    },
+    // 获取评价列表
     getEvaluateList () {
       let query = {
         pageIndex: this.pageindex,

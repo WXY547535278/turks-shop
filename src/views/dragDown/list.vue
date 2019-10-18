@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import { getdragDownList } from "@/api/dragDown";
+import { getdragDownList } from "@/api/dragDown"
 import { parseTime } from "@/utils/index"
 
 export default {
