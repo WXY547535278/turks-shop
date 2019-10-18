@@ -28,9 +28,9 @@
 
     <el-table :data="tableData">
       <!-- 用户信息 -->
-      <!-- <el-table-column prop="id"
+      <el-table-column prop="id"
                        label="id"
-                       width="250"></el-table-column> -->
+                       width="250"></el-table-column>
       <el-table-column prop="name"
                        label="名字"
                        width="200"></el-table-column>
