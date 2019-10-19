@@ -86,3 +86,12 @@ export function delUser(unionid) {
         method: 'delete'
     })
 }
+
+// 发送短信
+export function sendMsgToOne(data) {
+    return request({
+        url: '/sms',
+        method: 'post',
+        data
+    })
+}

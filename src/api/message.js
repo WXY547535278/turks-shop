@@ -41,10 +41,9 @@ export function delMessage(unionid) {
 }
 
 // 发送短信
-export function SendMessage(data, param) {
+export function SendMessage(param) {
     return request({
         url: '/sms/batch?' + param,
-        method: 'post',
-        data
+        method: 'post'
     })
 }

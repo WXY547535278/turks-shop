@@ -128,10 +128,11 @@
 
     <el-dialog title="发送短信"
                :visible.sync="showView1"
-               width="80%">
+               width="50%"
+               >
       <el-form ref="form"
                label-width="80px">
-        <el-form-item label="短信内容">
+        <el-form-item label="短信内容" v-loading="loading">
           <el-input type="textarea"
                     v-model="text"
                     style="width:400px"></el-input>
@@ -173,7 +174,8 @@ export default {
         userPhone: null,
         param: null
       },
-      text: null // 短信内容
+      text: null, // 短信内容
+      loading: false
     }
   },
   mounted () {
@@ -186,9 +188,16 @@ export default {
   methods: {
     // 发送短信
     sendMsg() {
-      var data = {}
-      SendMessage(data, this.text).then(res => {
-        console.log('发送成功')
+      this.loading = true
+      SendMessage(this.text).then(res => {
+        if (res.code == '200') {
+          this.$message({
+            type: 'success',
+            message: '发送成功!'
+          })
+          this.loading = false
+          this.showView1 = true
+        }
       })
     },
     showPost () {

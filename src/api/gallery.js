@@ -16,6 +16,9 @@ export function getGalleryList(query) {
     if (query.textLike) {
         url += '&textLike=' + query.textLike
     }
+    if (query.typeId) {
+        url += '&typeId=' + query.typeId
+    }
     return request({
         url: url,
         method: 'get'

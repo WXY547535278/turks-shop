@@ -95,6 +95,7 @@
               更多操作<i class="el-icon-arrow-down el-icon--right"></i>
             </el-button>
             <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native.prevent="showSendMsg(scope.row.id,scope.row.phone)">发送短信</el-dropdown-item>
               <el-dropdown-item @click.native.prevent="showNext(scope.row.id)">查看下级</el-dropdown-item>
               <el-dropdown-item @click.native.prevent="showUser(scope.row.id)">帮忙注册的用户</el-dropdown-item>
               <el-dropdown-item @click.native.prevent="showPut(scope.row.id)">修改</el-dropdown-item>
@@ -338,11 +339,29 @@
       </div>
     </el-dialog>
 
+    <!-- 发送短信 -->
+    <el-dialog title="发送短信"
+               :visible.sync="showView2"
+               width="50%"
+               >
+      <el-form ref="form"
+               label-width="80px">
+        <el-form-item label="短信内容" v-loading="loading">
+          <el-input type="textarea"
+                    v-model="msgContent"
+                    style="width:400px"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary"
+                     @click="sendMsg()">发送</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getUserList, delUser, postUser, putUser } from "@/api/user";
+import { getUserList, delUser, postUser, putUser, sendMsgToOne } from "@/api/user";
 import { parseTime } from "@/utils/index"
 import { getdragDownList } from "@/api/dragDown"
 import { getUserTeam } from "@/api/team"
@@ -366,6 +385,7 @@ export default {
       currentPage2: 1,
       showView: false,
       showView1: false,
+      showView2: false,
       pageindex: 0, // 当前页
       pageSize: 10, // 每页数量
       total: 0, // 数量总条数
@@ -409,7 +429,12 @@ export default {
         score: null
       },
       id1: null,
-      id2: null
+      id2: null,
+      // 发送短信
+      msgContent: null,
+      user_id: null,
+      phone: null,
+      loading: false
     }
   },
   mounted () {
@@ -459,6 +484,30 @@ export default {
     // 搜索
     onSubmit () {
       this.getUserList()
+    },
+    showSendMsg (user_id, phone) {
+      this.user_id = user_id
+      this.phone = phone
+      this.showView2 = true
+    },
+    // 发送短信
+    sendMsg() {
+      this.loading = true
+      var data = {
+        param: this.msgContent,
+        userId: this.user_id,
+        userPhone: this.phone
+      }
+      sendMsgToOne(data).then(res => {
+        if (res.code == '200') {
+          this.$message({
+            type: 'success',
+            message: '发送成功!'
+          })
+          this.loading = false
+          this.showView2 = false
+        }
+      })
     },
     // 帮忙注册列表
     showUser (id) {

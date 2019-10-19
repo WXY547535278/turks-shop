@@ -135,11 +135,12 @@
               更多操作<i class="el-icon-arrow-down el-icon--right"></i>
             </el-button>
             <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native.prevent="showSendMsg(scope.row.id,scope.row.phone)">发送短信</el-dropdown-item>
               <el-dropdown-item @click.native.prevent="showNext(scope.row.id)">查看下级</el-dropdown-item>
               <el-dropdown-item @click.native.prevent="showAddress(scope.row.id)">查看用户地址</el-dropdown-item>
               <el-dropdown-item @click.native.prevent="showUser(scope.row.id)">帮忙注册的用户</el-dropdown-item>
               <el-dropdown-item @click.native.prevent="showPutStatus(scope.row.id)">修改用户状态</el-dropdown-item>
-              <!-- <el-dropdown-item @click.native.prevent="deleteThis(scope.row.id,1)">删除用户</el-dropdown-item> -->
+              <el-dropdown-item @click.native.prevent="deleteThis(scope.row.id,1)">删除用户</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -326,11 +327,30 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+
+    <!-- 发送短信 -->
+    <el-dialog title="发送短信"
+               :visible.sync="showView4"
+               width="50%"
+               >
+      <el-form ref="form"
+               label-width="80px">
+        <el-form-item label="短信内容" v-loading="loading">
+          <el-input type="textarea"
+                    v-model="msgContent"
+                    style="width:400px"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary"
+                     @click="sendMsg()">发送</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getUserList, getClassById, delUser, putUser } from "@/api/user"
+import { getUserList, delUser, putUser, sendMsgToOne } from "@/api/user"
 import { getAddressList, getAddressById } from "@/api/address"
 import { getdragDownList } from "@/api/dragDown"
 import { getUserTeam } from "@/api/team"
@@ -352,6 +372,7 @@ export default {
       showView1: false,
       showView2: false,
       showView3: false,
+      showView4: false,
       // showView2: false,
       pageindex: 0, // 当前页
       pageSize: 10, // 每页数量
@@ -385,7 +406,13 @@ export default {
       putStatus: {
         id: null,
         status: null
-      }
+      },
+      // 发送短信
+      msgContent: null,
+      user_id: null,
+      phone: null,
+      loading: false
+
     }
   },
   mounted () {
@@ -432,6 +459,30 @@ export default {
       this.pageindex2 = e - 1
       this.getdragDownList(this.id2)
     },
+    // 发送短信
+    sendMsg() {
+      this.loading = true
+      var data = {
+        param: this.msgContent,
+        userId: this.user_id,
+        userPhone: this.phone
+      }
+      sendMsgToOne(data).then(res => {
+        if(res.code == '200') {
+          this.$message({
+            type: 'success',
+            message: '发送成功!'
+          })
+          this.loading = false
+          this.showView4 = false
+        }
+      })
+    },
+    showSendMsg (user_id, phone) {
+      this.user_id = user_id
+      this.phone = phone
+      this.showView4 = true
+    },
     showPutStatus (id) {
       this.putStatus.id = id
       this.showView3 = true
@@ -460,33 +511,33 @@ export default {
       })
     },
     // 删除普通用户
-    // deleteThis (id) {
-    //   this.$confirm('是否确认删除', '提示', {
-    //     confirmButtonText: '确定',
-    //     cancelButtonText: '取消',
-    //     type: 'warning'
-    //   }).then(() => {
-    //     delUser(id).then(res => {
-    //       if (res.code === '200') {
-    //         this.$message({
-    //           type: 'success',
-    //           message: '操作成功!'
-    //         })
-    //         this.getUserList()
-    //       } else {
-    //         this.$message({
-    //           type: 'warning',
-    //           message: '操作失败'
-    //         })
-    //       }
-    //     })
-    //   }).catch(() => {
-    //     this.$message({
-    //       type: 'info',
-    //       message: '已取消删除'
-    //     })
-    //   })
-    // },
+    deleteThis (id) {
+      this.$confirm('是否确认删除', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        delUser(id).then(res => {
+          if (res.code === '200') {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+            this.getUserList()
+          } else {
+            this.$message({
+              type: 'warning',
+              message: '操作失败'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
     // 搜索
     onSubmit () {
       this.getUserList()

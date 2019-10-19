@@ -11,9 +11,9 @@
     </el-form>
 
     <el-table :data="tableData">
-      <!-- <el-table-column prop="id"
+      <el-table-column prop="id"
                        label="id"
-                       width="250"></el-table-column> -->
+                       width="250"></el-table-column>
 
       <el-table-column prop="name"
                        label="类型名"></el-table-column>

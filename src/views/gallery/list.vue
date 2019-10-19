@@ -9,22 +9,26 @@
         <el-input v-model="formInline.textLike"
                   placeholder="类型名"></el-input>
       </el-form-item>
+      <el-form-item label="类型id">
+        <el-input v-model="formInline.typeId"
+                  placeholder="类型id"></el-input>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary"
                    @click="onSubmit">查询</el-button>
       </el-form-item>
-      <el-form-item style="float: right;">
+      <!-- <el-form-item style="float: right;">
         <el-button type="success"
                    @click="showPost">新增图库</el-button>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
     <el-table :data="tableData">
       <!-- <el-table-column prop="id"
                        label="id"
                        width="250"></el-table-column> -->
-      <!-- <el-table-column prop="typeId"
+      <el-table-column prop="typeId"
                        label="类型id"
-                       width="250"></el-table-column> -->
+                       width="250"></el-table-column>
       <el-table-column prop="sort"
                        label="排序序号"></el-table-column>
       <el-table-column prop="text.name"
@@ -269,7 +273,8 @@ export default {
       status: null,
       // 搜索内容
       formInline: {
-        textLike: null
+        textLike: null,
+        typeId: null
       },
       fileList: [],
       putView: false,
@@ -323,7 +328,8 @@ export default {
       let query = {
         pageIndex: this.pageindex,
         pageSize: this.pageSize,
-        textLike: this.formInline.textLike
+        textLike: this.formInline.textLike,
+        typeId: this.formInline.typeId
       }
       getGalleryList(query).then(res => {
         console.log('获取到的图库', res)
