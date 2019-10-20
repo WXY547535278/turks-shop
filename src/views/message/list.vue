@@ -196,7 +196,7 @@ export default {
             message: '发送成功!'
           })
           this.loading = false
-          this.showView1 = true
+          this.showView1 = false
         }
       })
     },

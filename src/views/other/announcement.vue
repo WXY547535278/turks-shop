@@ -17,11 +17,11 @@
       <el-table-column prop="text.title"
                        label="标题"
                        width="auto"></el-table-column>
-      <el-table-column prop="text.content"
+      <!-- <el-table-column prop="text.content"
                        :show-overflow-tooltip="true"
                        label="内容"
                        width="800"
-                       ></el-table-column>
+                       ></el-table-column> -->
       <el-table-column fixed="right"
                        label="操作"
                        width="auto">
