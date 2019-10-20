@@ -2,7 +2,8 @@
   <div style="width:90%;margin-left:5%;margin-top:1%">
     <el-tabs v-model="activeName"
              type="card"
-             @tab-click="handleClick">
+             @tab-click="handleClick"
+             v-loading="loading">
       <el-tab-pane label="派单开关管理"
                    name="3">
         <el-switch style="display: block"
@@ -19,8 +20,8 @@
         <el-input v-model="setText"
                   placeholder="时间设置"
                   style="width:200px"></el-input>
-        <el-button type="success"
-                   icon="el-icon-check"
+        <el-button type="primary"
+                   icon="el-icon-edit"
                    circle
                    @click="putThis"></el-button>
       </el-tab-pane>
@@ -29,8 +30,8 @@
         <el-input v-model="setText"
                   placeholder="时间设置"
                   style="width:200px"></el-input>
-        <el-button type="success"
-                   icon="el-icon-check"
+        <el-button type="primary"
+                   icon="el-icon-edit"
                    circle
                    @click="putThis"></el-button>
       </el-tab-pane>
@@ -67,7 +68,8 @@ export default {
       value: true,
       id: null,
       type: 3,
-      setText: null
+      setText: null,
+      loading: false
     }
   },
 
@@ -124,6 +126,7 @@ export default {
       this.getOtherList()
     },
     getOtherList () {
+      this.loading = true
       let query = {
         pageIndex: this.pageindex,
         pageSize: this.pageSize,
@@ -138,6 +141,7 @@ export default {
         }
         this.setText = res.data[0].text
         this.id = res.data[0].id
+        this.loading = false
         console.log('获取到id', this.id)
       })
     },
