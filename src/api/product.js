@@ -19,6 +19,9 @@ export function getProductList(query) {
     if (query.userId) { // 对应的用户id
         url += '&userId=' + query.userId
     }
+    if (query.name) { // 产品名
+        url += '&name=' + query.name
+    }
     return request({
         url: url,
         method: 'get'

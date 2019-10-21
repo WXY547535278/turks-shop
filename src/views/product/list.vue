@@ -10,6 +10,10 @@
                   placeholder="id"></el-input>
       </el-form-item> -->
 
+      <el-form-item label="产品名">
+        <el-input v-model="formInline.name"
+                  placeholder="产品名"></el-input>
+      </el-form-item>
       <el-form-item label="用户id">
         <el-input v-model="formInline.userId"
                   placeholder="用户id"></el-input>
@@ -56,7 +60,7 @@
                        width="150">
         <template slot-scope="scope"><img v-image-preview
                style="width: 35px; height: 35px"
-               :src="JSON.parse(scope.row.bannerOne)[0]"
+               :src="JSON.parse(scope.row.banner)[0]"
                fit="fill" /></template>
       </el-table-column>
       <el-table-column label="详情图片"
@@ -174,7 +178,8 @@ export default {
       formInline: {
         userId: null,
         id: null,
-        status: null
+        status: null,
+        name: null
       }
     }
   },
@@ -267,7 +272,8 @@ export default {
         pageSize: this.pageSize,
         status: this.formInline.status,
         id: this.formInline.leekId,
-        userId: this.formInline.userId
+        userId: this.formInline.userId,
+        name: this.formInline.name
       }
       getProductList(query).then(res => {
         console.log('获取产品列表', res)
@@ -279,7 +285,7 @@ export default {
           }
           return item
         })
-        // this.tableData = res.data
+        this.tableData = res.data
         this.total = res.pageTotal
       })
     },

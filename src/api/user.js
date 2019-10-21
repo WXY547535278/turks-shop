@@ -34,6 +34,9 @@ export function getUserList(query) {
     if (query.id) { // 用户id
         url += '&id=' + query.id
     }
+    if (query.name) { // 用户姓名
+        url += '&name=' + query.name
+    }
     if (query.rank) { // 等级
         url += '&rank=' + query.rank
     }

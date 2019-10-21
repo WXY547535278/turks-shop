@@ -8,6 +8,10 @@
         <el-input v-model="formInline.id"
                   placeholder="id"></el-input>
       </el-form-item> -->
+      <el-form-item label="姓名">
+        <el-input v-model="formInline.name"
+                  placeholder="姓名"></el-input>
+      </el-form-item>
       <el-form-item label="电话号码">
         <el-input v-model="formInline.phone"
                   placeholder="电话号码"></el-input>
@@ -40,7 +44,7 @@
                        label="id"
                        width="250"></el-table-column>
       <el-table-column prop="name"
-                       label="昵称"
+                       label="姓名"
                        width="200"></el-table-column>
       <el-table-column prop="phone"
                        label="电话"
@@ -391,7 +395,8 @@ export default {
         type: 1,
         rank: null,
         id: null,
-        phone: null
+        phone: null,
+        name: null
       },
       // 地址详情
       showMessage: {
@@ -631,7 +636,8 @@ export default {
         id: this.formInline.id,
         phone: this.formInline.phone,
         status: this.formInline.status,
-        type: this.formInline.type
+        type: this.formInline.type,
+        name: this.formInline.name
       }
       getUserList(query).then(res => {
         console.log('获取到的用户列表', res)
