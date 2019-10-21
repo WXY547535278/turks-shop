@@ -5,19 +5,27 @@
              :model="formInline"
              class="demo-form-inline">
 
-      <!-- <el-form-item label="需要升级人id">
-        <el-input v-model="formInline.leekId"
-                  placeholder="需要升级人id"></el-input>
-      </el-form-item> -->
-
-      <!-- <el-form-item label="审核人id">
-        <el-input v-model="formInline.masterId"
-                  placeholder="审核人id"></el-input>
-      </el-form-item> -->
-      <!-- <el-form-item label="对应订单id">
+      <el-form-item label="订单id">
         <el-input v-model="formInline.orderId"
-                  placeholder="对应订单id"></el-input>
-      </el-form-item> -->
+                  placeholder="订单id"></el-input>
+      </el-form-item>
+
+      <el-form-item label="审核人名字">
+        <el-input v-model="formInline.masterName"
+                  placeholder="审核人名字"></el-input>
+      </el-form-item>
+      <el-form-item label="审核人电话">
+        <el-input v-model="formInline.masterPhone"
+                  placeholder="审核人电话"></el-input>
+      </el-form-item>
+      <el-form-item label="申请人名字">
+        <el-input v-model="formInline.leekName"
+                  placeholder="申请人名字"></el-input>
+      </el-form-item>
+      <el-form-item label="申请人电话">
+        <el-input v-model="formInline.leekPhone"
+                  placeholder="申请人电话"></el-input>
+      </el-form-item>
 
       <el-form-item label="审核状态 ">
         <el-select v-model="formInline.status"
@@ -61,6 +69,9 @@
       <el-table-column prop="leekPhone"
                        label="申请升级人电话"
                        width="150"></el-table-column>
+      <el-table-column prop="orderId"
+                       label="订单id"
+                       width="200"></el-table-column>
       <el-table-column label="申请升级人头像"
                        width="150">
         <template slot-scope="scope"><img v-image-preview
@@ -74,9 +85,6 @@
       <el-table-column prop="aldebaran"
                        label="升级后的等级"
                        width="200"></el-table-column>
-      <!-- <el-table-column prop="orderId"
-                       label="对应的订单id"
-                       width="200"></el-table-column> -->
       <!-- 需要升级人 -->
       <!-- <el-table-column prop="leekId"
                        label="需要升级人id"
@@ -184,10 +192,12 @@ export default {
       total: 0, // 数量总条数
       // 搜索内容
       formInline: {
-        leekId: null,
-        masterId: null,
         status: null,
         type: null,
+        masterName: null,
+        masterPhone: null,
+        leekName: null,
+        leekPhone: null,
         orderId: null
       }
     }
@@ -243,8 +253,10 @@ export default {
         pageIndex: this.pageindex,
         pageSize: this.pageSize,
         status: this.formInline.status,
-        leekId: this.formInline.leekId,
-        masterId: this.formInline.masterId,
+        masterName: this.formInline.masterName,
+        masterPhone: this.formInline.masterPhone,
+        leekName: this.formInline.leekName,
+        leekPhone: this.formInline.leekPhone,
         type: this.formInline.type,
         orderId: this.formInline.orderId
       }

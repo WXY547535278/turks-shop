@@ -5,15 +5,31 @@
              :model="formInline"
              class="demo-form-inline">
 
-      <!-- <el-form-item label="投诉人id">
+      <el-form-item label="投诉人id">
         <el-input v-model="formInline.masterId"
                   placeholder="投诉人id"></el-input>
-      </el-form-item> -->
+      </el-form-item>
 
-      <!-- <el-form-item label="被投诉人id">
+      <el-form-item label="被投诉人id">
         <el-input v-model="formInline.slaverId"
                   placeholder="被投诉人id"></el-input>
-      </el-form-item> -->
+      </el-form-item>
+      <el-form-item label="投诉人姓名">
+        <el-input v-model="formInline.masterName"
+                  placeholder="投诉人姓名"></el-input>
+      </el-form-item>
+      <el-form-item label="投诉人电话">
+        <el-input v-model="formInline.masterPhone"
+                  placeholder="投诉人电话"></el-input>
+      </el-form-item>
+      <el-form-item label="被投诉人姓名">
+        <el-input v-model="formInline.slaverName"
+                  placeholder="被投诉人姓名"></el-input>
+      </el-form-item>
+      <el-form-item label="被投诉人电话 ">
+        <el-input v-model="formInline.slaverPhone"
+                  placeholder="被投诉人电话"></el-input>
+      </el-form-item>
 
       <el-form-item label="投诉状态 ">
         <el-select v-model="formInline.status"
@@ -39,10 +55,14 @@
       <!-- <el-table-column prop="id"
                        label="id"
                        width="250"></el-table-column> -->
+      <!-- 投诉人 -->
+      <el-table-column prop="masterId"
+                       label="投诉人id"
+                       width="150"></el-table-column>
       <el-table-column prop="masterName"
                        label="投诉人姓名"
                        width="150"></el-table-column>
-      <el-table-column prop="masterName"
+      <el-table-column prop="masterPhone"
                        label="投诉人电话"
                        width="150"></el-table-column>
       <el-table-column label="投诉人头像"
@@ -62,14 +82,10 @@
       <el-table-column prop="text"
                        label="投诉内容"
                        width="400"></el-table-column>
-      <!-- 投诉人 -->
-      <!-- <el-table-column prop="masterId"
-                       label="投诉人id"
-                       width="150"></el-table-column> -->
       <!-- 被投诉人 -->
-      <!-- <el-table-column prop="slaverId"
+      <el-table-column prop="slaverId"
                        label="被投诉人id"
-                       width="150"></el-table-column> -->
+                       width="150"></el-table-column>
       <el-table-column prop="slaverName"
                        label="被投诉人姓名"
                        width="150"></el-table-column>
@@ -175,7 +191,11 @@ export default {
       formInline: {
         status: null,
         masterId: null,
-        slaverId: null
+        slaverId: null,
+        masterName: null,
+        masterPhone: null,
+        slaverName: null,
+        slaverPhone: null
       }
     }
   },
@@ -231,7 +251,11 @@ export default {
         pageSize: this.pageSize,
         status: this.formInline.status,
         masterId: this.formInline.masterId,
-        slaverId: this.formInline.slaverId
+        slaverId: this.formInline.slaverId,
+        masterName: this.formInline.masterName,
+        masterPhone: this.formInline.masterPhone,
+        slaverName: this.formInline.slaverName,
+        slaverPhone: this.formInline.slaverPhone
       }
       getComplaintList(query).then(res => {
         console.log('获取到的投诉列表', res)

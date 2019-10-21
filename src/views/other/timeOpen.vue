@@ -4,8 +4,19 @@
              type="card"
              @tab-click="handleClick"
              v-loading="loading">
-      <el-tab-pane label="派单开关管理"
+      <el-tab-pane label="往下派单开关管理"
                    name="3">
+        <el-switch style="display: block"
+                   v-model="value"
+                   active-color="#13ce66"
+                   inactive-color="#ff4949"
+                   active-text="开"
+                   inactive-text="关"
+                   @change="switchOpen()">
+        </el-switch>
+      </el-tab-pane>
+      <el-tab-pane label="往上派单开关管理"
+                   name="10">
         <el-switch style="display: block"
                    v-model="value"
                    active-color="#13ce66"

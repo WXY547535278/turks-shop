@@ -5,15 +5,19 @@
              :model="formInline"
              class="demo-form-inline">
 
-      <!-- <el-form-item label="下单人id">
+      <el-form-item label="下单人id">
         <el-input v-model="formInline.leekId"
                   placeholder="下单人id"></el-input>
-      </el-form-item> -->
+      </el-form-item>
+      <el-form-item label="下单人姓名">
+        <el-input v-model="formInline.leekName"
+                  placeholder="下单人姓名"></el-input>
+      </el-form-item>
+      <el-form-item label="下单人电话">
+        <el-input v-model="formInline.leekPhone"
+                  placeholder="下单人电话"></el-input>
+      </el-form-item>
 
-      <!-- <el-form-item label="店铺id">
-        <el-input v-model="formInline.shopId"
-                  placeholder="店铺id"></el-input>
-      </el-form-item> -->
       <el-form-item label="下单人当前等级">
         <el-input v-model="formInline.rank"
                   placeholder="下单人当前等级"></el-input>
@@ -61,9 +65,9 @@
                        label="店铺id"
                        width="250"></el-table-column> -->
       <!-- 下单人 -->
-      <!-- <el-table-column prop="leekId"
+      <el-table-column prop="leekId"
                        label="下单人id"
-                       width="150"></el-table-column> -->
+                       width="150"></el-table-column>
       <el-table-column prop="leekName"
                        label="下单人姓名"
                        width="150"></el-table-column>
@@ -190,6 +194,8 @@ export default {
       formInline: {
         leekId: null,
         shopId: null,
+        leekName: null,
+        leekPhone: null,
         status: null,
         rank: null,
         deliveryType: null
@@ -238,7 +244,9 @@ export default {
         leekId: this.formInline.leekId,
         deliveryType: this.formInline.deliveryType,
         shopId: this.formInline.shopId,
-        rank: this.formInline.rank
+        rank: this.formInline.rank,
+        leekPhone: this.formInline.leekPhone,
+        leekName: this.formInline.leekName
       }
       getOrderList(query).then(res => {
         console.log('获取订单列表', res)

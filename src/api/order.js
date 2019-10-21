@@ -16,6 +16,12 @@ export function getOrderList(query) {
     if (query.id) { // 订单id
         url += '&id=' + query.id
     }
+    if (query.leekName) { // 下单人id
+        url += '&leekName=' + query.leekName
+    }
+    if (query.leekPhone) { // 订单id
+        url += '&leekPhone=' + query.leekPhone
+    }
     if (query.leekId) { // 下单人id
         url += '&leekId=' + query.leekId
     }

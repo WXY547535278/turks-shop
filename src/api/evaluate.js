@@ -39,3 +39,12 @@ export function delEvaluate(unionid) {
         method: 'delete'
     })
 }
+
+// 修改评价
+export function putEvaluate(data) {
+    return request({
+        url: '/evaluate',
+        method: 'put',
+        data
+    })
+}

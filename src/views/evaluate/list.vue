@@ -8,14 +8,14 @@
         <el-input v-model="formInline.id"
                   placeholder="id"></el-input>
       </el-form-item> -->
-      <!-- <el-form-item label="订单id">
+      <el-form-item label="订单id">
         <el-input v-model="formInline.orderId"
                   placeholder="订单id "></el-input>
-      </el-form-item> -->
-      <!-- <el-form-item label="用户id">
+      </el-form-item>
+      <el-form-item label="用户id">
         <el-input v-model="formInline.userId"
                   placeholder="用户id"></el-input>
-      </el-form-item> -->
+      </el-form-item>
       <el-form-item label="评价类型">
         <el-select v-model="formInline.type"
                    placeholder="评价类型 "
@@ -36,7 +36,7 @@
 
     <el-table :data="tableData">
       <!-- 评价列表 -->
-      <!-- <el-table-column prop="id"
+      <el-table-column prop="id"
                        label="id"
                        width="250"></el-table-column>
       <el-table-column prop="userId"
@@ -44,7 +44,7 @@
                        width="200"></el-table-column>
       <el-table-column prop="orderId"
                        label="订单id"
-                       width="200"></el-table-column> -->
+                       width="200"></el-table-column>
       <el-table-column prop="type"
                        label="评价类型"
                        width="auto"></el-table-column>
@@ -56,9 +56,19 @@
                        label="操作"
                        width="auto">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="showOrderList(scope.row.orderId)"
+          <!-- <el-button @click.native.prevent="showOrderList(scope.row.orderId)"
                      type="text"
-                     size="small">查看评价订单</el-button>
+                     size="small">查看评价订单</el-button> -->
+          <el-dropdown>
+            <el-button type="primary">
+              更多操作<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native.prevent="showOrderList(scope.row.orderId)">查看评价订单</el-dropdown-item>
+              <el-dropdown-item @click.native.prevent="putEvaluateType(scope.row.id)">修改评价</el-dropdown-item>
+              <el-dropdown-item @click.native.prevent="deleteThis(scope.row.id,1)">删除评价</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -160,12 +170,37 @@
       </el-table>
     </el-dialog>
 
+    <!-- 修改评价状态  -->
+    <el-dialog title="修改评价"
+               :visible.sync="showView2"
+               width="80%">
+      <el-form ref="form"
+               :model="putForm"
+               label-width="120px">
+        <el-form-item label="评价">
+          <el-select v-model="putForm.type"
+                     placeholder="评价">
+            <el-option label="好评"
+                       value="1"></el-option>
+            <el-option label="中评"
+                       value="2"></el-option>
+            <el-option label="差评"
+                       value="3"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary"
+                     @click="putThis()">修改</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
 import { getOrderList, getOrderDetail } from "@/api/order"
-import { getEvaluateList } from "@/api/evaluate";
+import { getEvaluateList, putEvaluate, delEvaluate } from "@/api/evaluate"
 import { parseTime } from "@/utils/index"
 
 export default {
@@ -179,6 +214,7 @@ export default {
       currentPage4: 1,
       showView: false,
       showView1: false,
+      showView2: false,
       pageindex: 0, // 当前页
       pageSize: 10, // 每页数量
       total: 0, // 数量总条数
@@ -189,6 +225,10 @@ export default {
         orderId: null,
         id: null
       },
+      putForm: {
+        id: null,
+        type: null
+      }
     }
   },
   mounted () {
@@ -210,6 +250,27 @@ export default {
       // console.log('当前页码', e)
       this.pageindex = e - 1
       this.getEvaluateList()
+    },
+    // 修改产品状态
+    putEvaluateType (id) {
+      this.putForm.id = id
+      this.showView2 = true
+    },
+    // 修改审核状态
+    putThis () {
+      putEvaluate(this.putForm).then(res => {
+        this.$message({
+          type: 'success',
+          message: '修改成功!'
+        })
+        this.showView2 = false
+        this.getEvaluateList()
+      }).catch(() => {
+        this.$message({
+          type: 'warning',
+          message: '修改失败'
+        })
+      })
     },
     // 搜索
     onSubmit () {
@@ -259,6 +320,33 @@ export default {
         })
         // this.tableData = res.data
         // this.total = res.pageTotal
+      })
+    },
+    deleteThis (id) {
+      this.$confirm('是否确认删除', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        delEvaluate(id).then(res => {
+          if (res.code == '200') {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+            this.getEvaluateList()
+          } else {
+            this.$message({
+              type: 'warning',
+              message: '操作失败'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     },
     // 获取评价列表
