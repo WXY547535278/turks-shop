@@ -91,78 +91,6 @@
                      :total="total">
       </el-pagination>
     </div>
-    <!--  新增区  -->
-    <el-dialog title="列表"
-               :visible.sync="postView"
-               width="80%">
-      <el-form ref="form"
-               :model="postForm"
-               label-width="120px">
-        <el-form-item label="类型id:">
-          <el-input v-model="postForm.typeId"
-                    style="width: auto;"
-                    type="nummber" />
-        </el-form-item>
-        <el-form-item label="排序序号:">
-          <el-input v-model="postForm.sort"
-                    style="width: auto;"
-                    type="nummber" />
-        </el-form-item>
-        <el-form-item label="跳转链接:">
-          <el-input v-model="postForm.param"
-                    style="width: auto;" />
-        </el-form-item>
-        <el-form-item label="昵称">
-          <el-input v-model="text.name"
-                    style="width: auto;" />
-        </el-form-item>
-        <el-form-item label="电话">
-          <el-input v-model="text.phone"
-                    style="width: auto;" />
-        </el-form-item>
-        <el-form-item label="微信">
-          <el-input v-model="text.wx"
-                    style="width: auto;" />
-        </el-form-item>
-        <el-form-item label="行业">
-          <el-input v-model="text.industry"
-                    style="width: auto;" />
-        </el-form-item>
-        <el-form-item label="备注">
-          <el-input v-model="text.bz"
-                    style="width: auto;" />
-        </el-form-item>
-        <el-form-item label="图片:">
-          <template>
-            <img style="width: 100px; height: 100px"
-                 :src="postForm.img"
-                 fit="fill" />
-          </template>
-
-          <el-upload class="upload-demo"
-                     :action="upload_url"
-                     :headers="upload_head"
-                     :multiple=false
-                     :limit=1
-                     :on-success="upload_success_banner"
-                     :file-list="fileList">
-            <el-button size="small"
-                       type="primary">点击上传</el-button>
-            <div slot="tip"
-                 class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-          </el-upload>
-
-        </el-form-item>
-
-        <hr>
-        <el-form-item>
-          <el-button type="primary"
-                     @click="postThis(postForm)">保存</el-button>
-        </el-form-item>
-
-      </el-form>
-
-    </el-dialog>
     <!--  修改区  -->
     <el-dialog title="列表"
                :visible.sync="putView"
@@ -245,12 +173,85 @@
 
     </el-dialog>
 
+    <!--  新增区  -->
+    <!-- <el-dialog title="列表"
+               :visible.sync="postView"
+               width="80%">
+      <el-form ref="form"
+               :model="postForm"
+               label-width="120px">
+        <el-form-item label="类型id:">
+          <el-input v-model="postForm.typeId"
+                    style="width: auto;"
+                    type="nummber" />
+        </el-form-item>
+        <el-form-item label="排序序号:">
+          <el-input v-model="postForm.sort"
+                    style="width: auto;"
+                    type="nummber" />
+        </el-form-item>
+        <el-form-item label="跳转链接:">
+          <el-input v-model="postForm.param"
+                    style="width: auto;" />
+        </el-form-item>
+        <el-form-item label="昵称">
+          <el-input v-model="text.name"
+                    style="width: auto;" />
+        </el-form-item>
+        <el-form-item label="电话">
+          <el-input v-model="text.phone"
+                    style="width: auto;" />
+        </el-form-item>
+        <el-form-item label="微信">
+          <el-input v-model="text.wx"
+                    style="width: auto;" />
+        </el-form-item>
+        <el-form-item label="行业">
+          <el-input v-model="text.industry"
+                    style="width: auto;" />
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="text.bz"
+                    style="width: auto;" />
+        </el-form-item>
+        <el-form-item label="图片:">
+          <template>
+            <img style="width: 100px; height: 100px"
+                 :src="postForm.img"
+                 fit="fill" />
+          </template>
+
+          <el-upload class="upload-demo"
+                     :action="upload_url"
+                     :headers="upload_head"
+                     :multiple=false
+                     :limit=1
+                     :on-success="upload_success_banner"
+                     :file-list="fileList">
+            <el-button size="small"
+                       type="primary">点击上传</el-button>
+            <div slot="tip"
+                 class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          </el-upload>
+
+        </el-form-item>
+
+        <hr>
+        <el-form-item>
+          <el-button type="primary"
+                     @click="postThis(postForm)">保存</el-button>
+        </el-form-item>
+
+      </el-form>
+
+    </el-dialog> -->
+
   </div>
 </template>
 
 <script>
-import { getGalleryList, deleteGallery, putGallery, postGallery } from "@/api/gallery";
-import { parseTime } from "@/utils/index"
+import { getGalleryList, deleteGallery, putGallery, postGallery } from '@/api/gallery'
+import { parseTime } from '@/utils/index'
 import { getUploadUrl } from '@/utils/index'
 import { getToken } from '@/utils/auth.js'
 
