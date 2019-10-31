@@ -3,7 +3,9 @@ import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
-const base_url = 'https://cloud.weiwochina.com/turks/'
+// const base_url = 'https://cloud.weiwochina.com/turks/'
+const base_url = 'http://cloud.yinghuoshoushou.com/'
+// const base_url = 'http://cloud.yinghuozhixing.com/'
 // create an axios instance
 const service = axios.create({
   baseURL: base_url, // url = base url + request url
